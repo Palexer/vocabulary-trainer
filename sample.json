@@ -1,0 +1,8 @@
+{
+    "Title": "Test File",
+    "Vocabulary": [
+        ["Test1", "translate1", "grammar1"],
+        ["Test3", "translate2", "grammar2"],
+        ["Test3", "translate3", "grammar3"]
+    ]
+}
