@@ -42,9 +42,7 @@ func setupUI() {
 	inputGrammar.SetPlaceHolder("Grammar")
 
 	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
-		// https://stackoverflow.com/questions/15323767/does-go-have-if-x-in-construct-similar-to-python#15323988
-
-		checkTranslation := checkTranslation(inputTranslation.Text, strings.Split(vocab.Vocabulary[index][1], ","))
+		checkTranslation := checkTranslation(inputTranslation.Text, vocab.Vocabulary[index][1])
 		checkGrammar := checkGrammar(inputGrammar.Text, vocab.Vocabulary[index][2])
 
 		if checkTranslation && checkGrammar {
@@ -97,10 +95,14 @@ func setupUI() {
 		fileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
 		fileDialog.Show()
 
-		// activate inputs + buttons when a file is opened
+		// activate inputs + buttons when a file is opened; cleanup
 		checkButton.Enable()
+		continueButton.Enable()
 		inputGrammar.Enable()
 		inputTranslation.Enable()
+		inputGrammar.SetText("")
+		inputTranslation.SetText("")
+		index, correct = 0, 0
 	})
 
 	// enable all inputs + buttons as long as there is no file opened
@@ -143,12 +145,17 @@ func fileOpened(f fyne.URIReadCloser) {
 	json.Unmarshal(byteData, &vocab)
 }
 
-func checkTranslation(inp string, correctAnswers []string) bool {
-	for _, b := range correctAnswers {
-		if b == inp {
+func checkTranslation(inp, correctAnswers string) bool {
+	if inp == correctAnswers {
+		return true
+	}
+
+	for _, answer := range strings.Split(correctAnswers, ",") {
+		if answer == inp {
 			return true
 		}
 	}
+
 	return false
 }
 
