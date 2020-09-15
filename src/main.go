@@ -59,7 +59,6 @@ func setupUI() {
 		} else {
 			result.SetText("Wrong")
 		}
-		correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index+1))
 	})
 
 	continueButton := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
@@ -87,6 +86,7 @@ func setupUI() {
 			foreignWord.SetText(vocab.Vocabulary[index][0])
 
 			finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocab.Vocabulary)))
+			correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index+1))
 
 			// cleanup
 			inputTranslation.SetText("")
@@ -184,6 +184,9 @@ func checkTranslation(inp, correctAnswers string) bool {
 }
 
 func checkGrammar(inp, correctAnswer string) bool {
+	if correctAnswer == "" && inp == "" {
+		return true
+	}
 	if inp == correctAnswer {
 		return true
 	}
