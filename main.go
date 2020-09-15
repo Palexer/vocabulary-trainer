@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"strconv"
 	"strings"
 
 	"fyne.io/fyne"
@@ -36,6 +37,9 @@ func setupUI() {
 	foreignWord := widget.NewLabel("")
 	result := widget.NewLabel("")
 
+	correctCounter := widget.NewLabel("")
+	finishedCounter := widget.NewLabel("")
+
 	inputTranslation := widget.NewEntry()
 	inputTranslation.SetPlaceHolder("Translation")
 	inputGrammar := widget.NewEntry()
@@ -55,12 +59,25 @@ func setupUI() {
 		} else {
 			result.SetText("Wrong")
 		}
+		correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index+1))
 	})
 
 	continueButton := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
-		if index-1 == len(vocab.Vocabulary[index]) {
-			doneDialog := dialog.NewConfirm("Done.", "You reached the end of the vocabulary list.", func(bool) {
+		if index == len(vocab.Vocabulary[index]) {
+			doneDialog := dialog.NewConfirm("Done.", "You reached the end of the vocabulary list. Restart?", func(restart bool) {
+				index, correct = 0, 0
 
+				correctCounter.SetText("")
+				finishedCounter.SetText("")
+				inputGrammar.SetText("")
+				inputTranslation.SetText("")
+
+				if restart == true {
+					foreignWord.SetText(vocab.Vocabulary[index][0])
+				} else {
+					foreignWord.SetText("")
+					// disable buttons
+				}
 			}, window)
 
 			doneDialog.Show()
@@ -68,6 +85,8 @@ func setupUI() {
 		} else {
 			index++
 			foreignWord.SetText(vocab.Vocabulary[index][0])
+
+			finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocab.Vocabulary)))
 
 			// cleanup
 			inputTranslation.SetText("")
@@ -102,6 +121,8 @@ func setupUI() {
 		inputTranslation.Enable()
 		inputGrammar.SetText("")
 		inputTranslation.SetText("")
+		correctCounter.SetText("")
+		finishedCounter.SetText("")
 		index, correct = 0, 0
 	})
 
@@ -111,18 +132,21 @@ func setupUI() {
 	inputGrammar.Disable()
 	inputTranslation.Disable()
 
-	window.SetContent(widget.NewVBox(
-		openButton,
-		title,
-		foreignWord,
-		inputTranslation,
-		inputGrammar,
-		widget.NewHBox(
-			checkButton,
-			continueButton,
-			result,
-		),
-	))
+	window.SetContent(
+		widget.NewVBox(
+			openButton,
+			title,
+			foreignWord,
+			inputTranslation,
+			inputGrammar,
+			widget.NewHBox(
+				checkButton,
+				continueButton,
+				result,
+			),
+			correctCounter,
+			finishedCounter,
+		))
 
 	window.ShowAndRun()
 }
