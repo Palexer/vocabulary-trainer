@@ -33,4 +33,5 @@ you have to put an empty string there (like in the last example above).
 ## ToDo
 
 - enable/disable buttons if they aren't useable or make them do nothing
-- button: light/dark theme
+- light/dark theme
+- automatically display the correct answer if input was wrong
