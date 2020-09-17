@@ -5,6 +5,21 @@
 Vocabulary Trainer is a small application written in Go, that can help you with learning new vocabulary.
 **Please note that the current state is not production ready.**
 
+## Installation
+
+## Windows
+
+- Download the exe file from the releases section and execute it.
+
+## Linux
+
+- Download the .tar.gz package from the releases section and extract it.
+- After that, open a terminal in the folder, that contains the "Makefile"
+- Execute the following command:
+``` bash
+sudo make install
+```
+
 ## Usage
 
 ### Formatting JSON files
