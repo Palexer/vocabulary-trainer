@@ -3,6 +3,7 @@
 ## About
 
 Vocabulary Trainer is a small application written in Go, that can help you with learning new vocabulary.
+**Please note that the current state is not production ready.**
 
 ## Usage
 
@@ -33,5 +34,5 @@ you have to put an empty string there (like in the last example above).
 ## ToDo
 
 - enable/disable buttons if they aren't useable or make them do nothing
-- light/dark theme
 - automatically display the correct answer if input was wrong
+- keep buttons disabled if no file was opened

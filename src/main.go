@@ -21,9 +21,9 @@ type vocabulary struct {
 }
 
 var (
-	vocab   vocabulary
-	index   int
-	correct int
+	vocabularyFile vocabulary
+	index          int
+	correct        int
 )
 
 func setupUI() {
@@ -46,8 +46,8 @@ func setupUI() {
 	inputGrammar.SetPlaceHolder("Grammar")
 
 	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
-		checkTranslation := checkTranslation(inputTranslation.Text, vocab.Vocabulary[index][1])
-		checkGrammar := checkGrammar(inputGrammar.Text, vocab.Vocabulary[index][2])
+		checkTranslation := checkTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
+		checkGrammar := checkGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
 
 		if checkTranslation && checkGrammar {
 			result.SetText("Correct")
@@ -62,7 +62,7 @@ func setupUI() {
 	})
 
 	continueButton := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
-		if index == len(vocab.Vocabulary[index]) {
+		if index == len(vocabularyFile.Vocabulary[index]) {
 			doneDialog := dialog.NewConfirm("Done.", "You reached the end of the vocabulary list. Restart?", func(restart bool) {
 				index, correct = 0, 0
 
@@ -72,7 +72,7 @@ func setupUI() {
 				inputTranslation.SetText("")
 
 				if restart == true {
-					foreignWord.SetText(vocab.Vocabulary[index][0])
+					foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 				} else {
 					foreignWord.SetText("")
 					// disable buttons
@@ -83,9 +83,9 @@ func setupUI() {
 
 		} else {
 			index++
-			foreignWord.SetText(vocab.Vocabulary[index][0])
+			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
-			finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocab.Vocabulary)))
+			finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocabularyFile.Vocabulary)))
 			correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index+1))
 
 			// cleanup
@@ -106,8 +106,8 @@ func setupUI() {
 			}
 
 			fileOpened(reader)
-			title.SetText(vocab.Title)
-			foreignWord.SetText(vocab.Vocabulary[index][0])
+			title.SetText(vocabularyFile.Title)
+			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
 		}, window)
 
@@ -166,7 +166,7 @@ func fileOpened(f fyne.URIReadCloser) {
 		return
 	}
 
-	json.Unmarshal(byteData, &vocab)
+	json.Unmarshal(byteData, &vocabularyFile)
 }
 
 func checkTranslation(inp, correctAnswers string) bool {
