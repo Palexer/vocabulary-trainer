@@ -28,6 +28,7 @@ var (
 
 func setupUI() {
 	app := app.New()
+	// app.SetIcon()
 	window := app.NewWindow("Vocabulary Trainer")
 	window.Resize(fyne.Size{
 		Width:  640,
@@ -45,24 +46,8 @@ func setupUI() {
 	inputGrammar := widget.NewEntry()
 	inputGrammar.SetPlaceHolder("Grammar")
 
-	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
-		checkTranslation := checkTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
-		checkGrammar := checkGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
-
-		if checkTranslation && checkGrammar {
-			result.SetText("Correct")
-			correct++
-
-		} else if checkTranslation || checkGrammar {
-			result.SetText("Partly correct")
-
-		} else {
-			result.SetText("Wrong")
-		}
-	})
-
 	continueButton := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
-		if index == len(vocabularyFile.Vocabulary[index]) {
+		if index+1 == len(vocabularyFile.Vocabulary) {
 			doneDialog := dialog.NewConfirm("Done.", "You reached the end of the vocabulary list. Restart?", func(restart bool) {
 				index, correct = 0, 0
 
@@ -95,6 +80,31 @@ func setupUI() {
 		}
 	})
 
+	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
+		checkTranslation := checkTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
+		checkGrammar := checkGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
+
+		if checkTranslation && checkGrammar {
+			result.SetText("Correct")
+			correct++
+
+		} else if checkTranslation {
+			result.SetText("Partly correct")
+			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
+
+		} else if checkGrammar {
+			result.SetText("Partly correct")
+			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
+
+		} else {
+			result.SetText("Wrong")
+			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
+			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
+		}
+
+		continueButton.Enable()
+	})
+
 	openButton := widget.NewButtonWithIcon("Open File", theme.FolderOpenIcon(), func() {
 		fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
 			if err == nil && reader == nil {
@@ -109,21 +119,19 @@ func setupUI() {
 			title.SetText(vocabularyFile.Title)
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
+			// activate inputs + buttons when a file is opened; cleanup
+			checkButton.Enable()
+			inputGrammar.Enable()
+			inputTranslation.Enable()
+			inputGrammar.SetText("")
+			inputTranslation.SetText("")
+			correctCounter.SetText("")
+			finishedCounter.SetText("")
+			index, correct = 0, 0
 		}, window)
 
 		fileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
 		fileDialog.Show()
-
-		// activate inputs + buttons when a file is opened; cleanup
-		checkButton.Enable()
-		continueButton.Enable()
-		inputGrammar.Enable()
-		inputTranslation.Enable()
-		inputGrammar.SetText("")
-		inputTranslation.SetText("")
-		correctCounter.SetText("")
-		finishedCounter.SetText("")
-		index, correct = 0, 0
 	})
 
 	// enable all inputs + buttons as long as there is no file opened
