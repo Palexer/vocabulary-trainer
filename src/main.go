@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	"fyne.io/fyne/layout"
+
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/dialog"
@@ -140,6 +142,14 @@ func setupUI() {
 	inputGrammar.Disable()
 	inputTranslation.Disable()
 
+	lightThemeBtn := widget.NewButton("Light Theme", func() {
+		app.Settings().SetTheme(theme.LightTheme())
+	})
+
+	darkThemeBtn := widget.NewButton("Dark Theme", func() {
+		app.Settings().SetTheme(theme.DarkTheme())
+	})
+
 	window.SetContent(
 		widget.NewVBox(
 			openButton,
@@ -154,6 +164,12 @@ func setupUI() {
 			),
 			correctCounter,
 			finishedCounter,
+			layout.NewSpacer(),
+			widget.NewHBox(
+				lightThemeBtn,
+				darkThemeBtn,
+				layout.NewSpacer(),
+			),
 		))
 
 	window.ShowAndRun()
