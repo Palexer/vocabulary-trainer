@@ -39,7 +39,6 @@ func setupUI() {
 	title := widget.NewLabel("")
 	foreignWord := widget.NewLabel("")
 	result := widget.NewLabel("")
-
 	correctCounter := widget.NewLabel("")
 	finishedCounter := widget.NewLabel("")
 
@@ -83,7 +82,7 @@ func setupUI() {
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
 			finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocabularyFile.Vocabulary)))
-			correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index+1))
+			correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index))
 
 			// cleanup
 			inputTranslation.SetText("")
@@ -133,9 +132,6 @@ func setupUI() {
 				return
 			}
 
-			title.SetText(vocabularyFile.Title)
-			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
-
 			// activate inputs + buttons when a file is opened; cleanup
 			checkButton.Enable()
 			inputGrammar.Enable()
@@ -145,6 +141,9 @@ func setupUI() {
 			correctCounter.SetText("")
 			finishedCounter.SetText("")
 			index, correct = 0, 0
+
+			title.SetText(vocabularyFile.Title)
+			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 		}, window)
 
 		fileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
