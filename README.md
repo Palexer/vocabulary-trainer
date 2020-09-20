@@ -45,7 +45,7 @@ Here is an example of a correctly formatted .json-file:
     "Vocabulary": [
         ["here goes the foreign word", "and here the translation", "and here optional grammar"],
         ["word in foreign language", "the user should input this", "the user has to input this in the grammar field"],
-        ["you can also use multiple options", "by,seperating,them,with,a,comma,like,this", ""],
+        ["you can also use multiple options", "by,separating,them,with,a,comma,like,this", ""],
     ]
 }
 ```
