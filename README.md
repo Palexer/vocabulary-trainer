@@ -16,9 +16,10 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 - Download the .tar.gz package from the releases section and extract it.
 - After that, open a terminal in the folder, that contains the "Makefile"
 - Execute the following command:
-``` bash
-sudo make install
-```
+  
+  ```bash
+  sudo make install
+  ```
 
 ## Usage
 
@@ -49,8 +50,8 @@ you have to put an empty string there (like in the last example above).
 ## ToDo
 
 - enable/disable buttons if they aren't useable or make them do nothing
-- automatically display the correct answer if input was wrong
 - keep buttons disabled if no file was opened
 - improve restart
 - Icon
-- one try
+- one try -> disable buttons
+- application for creating correctly formatted json-files
