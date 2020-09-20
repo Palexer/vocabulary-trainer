@@ -7,21 +7,32 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 
 ## Installation
 
-## Windows
+### Windows
 
 - Download the exe file from the releases section and execute it.
 
-## Linux
+### Linux
 
 - Download the .tar.gz package from the releases section and extract it.
+
 - After that, open a terminal in the folder, that contains the "Makefile"
+
 - Execute the following command:
   
   ```bash
   sudo make install
   ```
 
+### Compile it yourself
+
+coming soon
+
 ## Usage
+
+In order to use the Vocabulary Trainer you need a correctly formatted .json-file. You can see how to create one down below.
+You then need to open the file with the Vocabulary Trainer and the program will show you the first foreign word. Enter a 
+translation and, if you need to, also additional grammar. You can also enter multiple translations by separating them with a comma.
+Depending on the file, you may or may not need to insert a space after the comma (at least for now). The grammar should be entered completely and exactly like in the correct answer. If you entered your translation and grammar, click on the check button to see if you're input was correct. If this is not the case, you will now see the correct answer.  Click on "Continue" to go to the next word. The Vocabulary Trainer will count your correct answers as well as your already finished words while you are practicing.
 
 ### Formatting JSON files
 
@@ -55,3 +66,6 @@ you have to put an empty string there (like in the last example above).
 - Icon
 - one try -> disable buttons
 - application for creating correctly formatted json-files
+- input: optional space after comma too
+- choose random vocabulary
+- keyboard shortcuts
