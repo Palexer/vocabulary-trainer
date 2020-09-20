@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
-	"log"
 	"strconv"
 	"strings"
 
@@ -117,7 +117,12 @@ func setupUI() {
 				return
 			}
 
-			fileOpened(reader)
+			err = fileOpened(reader)
+			if err != nil {
+				dialog.ShowError(err, window)
+				return
+			}
+
 			title.SetText(vocabularyFile.Title)
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
@@ -175,22 +180,25 @@ func setupUI() {
 	window.ShowAndRun()
 }
 
-func fileOpened(f fyne.URIReadCloser) {
+func fileOpened(f fyne.URIReadCloser) error {
 	if f == nil {
-		log.Println("Cancelled")
-		return
+		return errors.New("cancelled")
 	}
 
 	byteData, err := ioutil.ReadAll(f)
 	if err != nil {
-		fyne.LogError("Failed to load text data", err)
-		return
+		return err
 	}
 	if byteData == nil {
-		return
+		return errors.New("the file does not have any content")
 	}
 
 	json.Unmarshal(byteData, &vocabularyFile)
+
+	if len(vocabularyFile.Vocabulary) == 0 {
+		return errors.New("the file does not contain any vocabulary or is not correctly formatted")
+	}
+	return nil
 }
 
 func checkTranslation(inp, correctAnswers string) bool {
@@ -203,7 +211,6 @@ func checkTranslation(inp, correctAnswers string) bool {
 			return true
 		}
 	}
-
 	return false
 }
 
