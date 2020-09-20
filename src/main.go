@@ -50,21 +50,31 @@ func setupUI() {
 
 	continueButton := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
 		if index+1 == len(vocabularyFile.Vocabulary) {
-			doneDialog := dialog.NewConfirm("Done.", "You reached the end of the vocabulary list. Restart?", func(restart bool) {
-				index, correct = 0, 0
+			doneDialog := dialog.NewConfirm(
+				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(index+1)+"\n Restart?",
+				func(restart bool) {
+					index, correct = 0, 0
 
-				correctCounter.SetText("")
-				finishedCounter.SetText("")
-				inputGrammar.SetText("")
-				inputTranslation.SetText("")
+					correctCounter.SetText("")
+					finishedCounter.SetText("")
+					inputGrammar.SetText("")
+					inputTranslation.SetText("")
 
-				if restart == true {
-					foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
-				} else {
-					foreignWord.SetText("")
-					// disable buttons
-				}
-			}, window)
+					if restart == true {
+						foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+
+						// make everything an empty string in vocabularyFile
+						vocabularyFile.Title = ""
+						for i := 0; i < len(vocabularyFile.Vocabulary); i++ {
+							for j := 0; j < len(vocabularyFile.Vocabulary[i]); j++ {
+								vocabularyFile.Vocabulary[i][j] = ""
+							}
+						}
+					} else {
+						foreignWord.SetText("")
+						// disable buttons
+					}
+				}, window)
 
 			doneDialog.Show()
 
