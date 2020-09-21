@@ -232,9 +232,22 @@ func checkTranslation(inp, correctAnswers string) bool {
 func checkGrammar(inp, correctAnswer string) bool {
 	if correctAnswer == "" && inp == "" {
 		return true
-	}
-	if inp == correctAnswer {
+
+	} else if inp == correctAnswer {
 		return true
+
+	} else {
+		lsgSpace := strings.Split(inp, ",")
+
+		for i := 0; i < len(lsgSpace); i++ {
+			if string(lsgSpace[i][0]) == " " {
+				lsgSpace[i] = lsgSpace[i][1:]
+			}
+		}
+
+		if strings.Join(lsgSpace, ",") == correctAnswer {
+			return true
+		}
 	}
 	return false
 }
