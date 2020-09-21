@@ -207,6 +207,12 @@ func fileOpened(f fyne.URIReadCloser) error {
 	if len(vocabularyFile.Vocabulary) == 0 {
 		return errors.New("the file does not contain any vocabulary or is not correctly formatted")
 	}
+
+	for i := 0; i < len(vocabularyFile.Vocabulary); i++ {
+		if len(vocabularyFile.Vocabulary[i]) != 3 {
+			return errors.New("the file contains vocabulary with too many or too less arguments (error in list item " + strconv.Itoa(i+1) + " )")
+		}
+	}
 	return nil
 }
 

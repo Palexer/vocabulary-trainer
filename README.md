@@ -69,3 +69,5 @@ you have to put an empty string there (like in the last example above).
 - input: optional space after comma too
 - choose random vocabulary
 - keyboard shortcuts
+- percentage at the end
+- error if only two items for one word instead of three
