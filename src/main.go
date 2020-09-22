@@ -26,6 +26,7 @@ var (
 	vocabularyFile vocabulary
 	index          int
 	correct        int
+	didCheck       bool
 )
 
 func setupUI() {
@@ -78,6 +79,11 @@ func setupUI() {
 			doneDialog.Show()
 
 		} else {
+			if didCheck == false {
+				dialog.ShowError(errors.New("please check your input before you continue"), window)
+				return
+			}
+
 			index++
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
@@ -88,6 +94,8 @@ func setupUI() {
 			inputTranslation.SetText("")
 			inputGrammar.SetText("")
 			result.SetText("")
+
+			didCheck = false
 		}
 	})
 
@@ -117,6 +125,7 @@ func setupUI() {
 			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
 			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
 		}
+		didCheck = true
 	})
 
 	openButton := widget.NewButtonWithIcon("Open File", theme.FolderOpenIcon(), func() {
