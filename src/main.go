@@ -7,11 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	"fyne.io/fyne/layout"
-
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/dialog"
+	"fyne.io/fyne/layout"
 	"fyne.io/fyne/storage"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
@@ -94,9 +93,8 @@ func setupUI() {
 			inputTranslation.SetText("")
 			inputGrammar.SetText("")
 			result.SetText("")
-
-			didCheck = false
 		}
+		didCheck = false
 	})
 
 	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {

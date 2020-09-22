@@ -60,13 +60,12 @@ you have to put an empty string there (like in the last example above).
 
 ## ToDo
 
-- enable/disable buttons if they aren't useable or make them do nothing
 - keep buttons disabled if no file was opened
 - improve restart
 - Icon
-- one try -> disable buttons
+- one try (counter variable)
 - application for creating correctly formatted json-files
 - choose random vocabulary
 - keyboard shortcuts
 - percentage at the end
-- error if only two items for one word instead of three
+- dialog that shows wrong words at the end
