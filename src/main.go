@@ -92,6 +92,11 @@ func setupUI() {
 	})
 
 	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
+		if inputTranslation.Text == "" || inputGrammar.Text == "" && vocabularyFile.Vocabulary[index][2] != "" {
+			dialog.ShowError(errors.New("please enter a translation first"), window)
+			return
+		}
+
 		checkTranslation := checkTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
 		checkGrammar := checkGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
 
@@ -112,8 +117,6 @@ func setupUI() {
 			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
 			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
 		}
-
-		continueButton.Enable()
 	})
 
 	openButton := widget.NewButtonWithIcon("Open File", theme.FolderOpenIcon(), func() {
@@ -134,6 +137,7 @@ func setupUI() {
 
 			// activate inputs + buttons when a file is opened; cleanup
 			checkButton.Enable()
+			continueButton.Enable()
 			inputGrammar.Enable()
 			inputTranslation.Enable()
 			inputGrammar.SetText("")
@@ -216,12 +220,24 @@ func fileOpened(f fyne.URIReadCloser) error {
 	return nil
 }
 
-func checkTranslation(inp, correctAnswers string) bool {
-	if inp == correctAnswers {
+func checkTranslation(inp, correctAnswer string) bool {
+	if inp == correctAnswer {
 		return true
 	}
 
-	for _, answer := range strings.Split(correctAnswers, ",") {
+	inpSplitted := strings.Split(inp, ",")
+
+	for i := 0; i < len(inpSplitted); i++ {
+		if string(inpSplitted[i][0]) == " " {
+			inpSplitted[i] = inpSplitted[i][1:]
+		}
+	}
+
+	if strings.Join(inpSplitted, ",") == correctAnswer {
+		return true
+	}
+
+	for _, answer := range strings.Split(correctAnswer, ",") {
 		if answer == inp {
 			return true
 		}
@@ -237,15 +253,15 @@ func checkGrammar(inp, correctAnswer string) bool {
 		return true
 
 	} else {
-		lsgSpace := strings.Split(inp, ",")
+		inpSplitted := strings.Split(inp, ",")
 
-		for i := 0; i < len(lsgSpace); i++ {
-			if string(lsgSpace[i][0]) == " " {
-				lsgSpace[i] = lsgSpace[i][1:]
+		for i := 0; i < len(inpSplitted); i++ {
+			if string(inpSplitted[i][0]) == " " {
+				inpSplitted[i] = inpSplitted[i][1:]
 			}
 		}
 
-		if strings.Join(lsgSpace, ",") == correctAnswer {
+		if strings.Join(inpSplitted, ",") == correctAnswer {
 			return true
 		}
 	}

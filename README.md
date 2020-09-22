@@ -66,7 +66,6 @@ you have to put an empty string there (like in the last example above).
 - Icon
 - one try -> disable buttons
 - application for creating correctly formatted json-files
-- input: optional space after comma too
 - choose random vocabulary
 - keyboard shortcuts
 - percentage at the end
