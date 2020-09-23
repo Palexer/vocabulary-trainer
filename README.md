@@ -3,7 +3,7 @@
 ## About
 
 Vocabulary Trainer is a small application written in Go, that can help you with learning new vocabulary.
-**Please note that the current state is not production ready.**
+**Please note that the program is currently in beta.**
 
 ## Installation
 
@@ -50,7 +50,7 @@ Here is an example of a correctly formatted .json-file:
 }
 ```
 
-_Note: You are currently NOT allowed to have spaces after the commas._
+_Note: You are currently NOT allowed to have spaces after the commas in the .json-files._
 The last list entry is optional (additional grammar). If you don't use it for a word, 
 you have to put an empty string there (like in the last example above).
 
@@ -69,3 +69,4 @@ you have to put an empty string there (like in the last example above).
 - keyboard shortcuts
 - percentage at the end
 - dialog that shows wrong words at the end
+- fix correct words counter -> only on restart?

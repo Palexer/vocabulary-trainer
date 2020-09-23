@@ -5,7 +5,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"strconv"
-	"strings"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
@@ -28,13 +27,14 @@ var (
 	didCheck       bool
 )
 
-func setupUI() {
+func setupMainUI() {
 	app := app.New()
 	// app.SetIcon()
 	window := app.NewWindow("Vocabulary Trainer")
 	window.Resize(fyne.Size{
-		Width:  640,
-		Height: 480})
+		Width:  800,
+		Height: 600,
+	})
 
 	title := widget.NewLabel("")
 	foreignWord := widget.NewLabel("")
@@ -103,18 +103,18 @@ func setupUI() {
 			return
 		}
 
-		checkTranslation := checkTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
-		checkGrammar := checkGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
+		CheckTranslation := CheckTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
+		CheckGrammar := CheckGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
 
-		if checkTranslation && checkGrammar {
+		if CheckTranslation && CheckGrammar {
 			result.SetText("Correct")
 			correct++
 
-		} else if checkTranslation {
+		} else if CheckTranslation {
 			result.SetText("Partly correct")
 			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
 
-		} else if checkGrammar {
+		} else if CheckGrammar {
 			result.SetText("Partly correct")
 			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
 
@@ -127,7 +127,7 @@ func setupUI() {
 	})
 
 	openButton := widget.NewButtonWithIcon("Open File", theme.FolderOpenIcon(), func() {
-		fileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+		openFileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
 			if err == nil && reader == nil {
 				return
 			}
@@ -157,8 +157,8 @@ func setupUI() {
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 		}, window)
 
-		fileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
-		fileDialog.Show()
+		openFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
+		openFileDialog.Show()
 	})
 
 	// enable all inputs + buttons as long as there is no file opened
@@ -173,6 +173,10 @@ func setupUI() {
 
 	darkThemeBtn := widget.NewButton("Dark Theme", func() {
 		app.Settings().SetTheme(theme.DarkTheme())
+	})
+
+	openGeneratorBtn := widget.NewButtonWithIcon("Vocabulary Generator", theme.FileApplicationIcon(), func() {
+		SetupUIVocabularyGenerator(fyne.CurrentApp())
 	})
 
 	window.SetContent(
@@ -194,6 +198,7 @@ func setupUI() {
 				lightThemeBtn,
 				darkThemeBtn,
 				layout.NewSpacer(),
+				openGeneratorBtn,
 			),
 		))
 
@@ -227,54 +232,6 @@ func fileOpened(f fyne.URIReadCloser) error {
 	return nil
 }
 
-func checkTranslation(inp, correctAnswer string) bool {
-	if inp == correctAnswer {
-		return true
-	}
-
-	inpSplitted := strings.Split(inp, ",")
-
-	for i := 0; i < len(inpSplitted); i++ {
-		if string(inpSplitted[i][0]) == " " {
-			inpSplitted[i] = inpSplitted[i][1:]
-		}
-	}
-
-	if strings.Join(inpSplitted, ",") == correctAnswer {
-		return true
-	}
-
-	for _, answer := range strings.Split(correctAnswer, ",") {
-		if answer == inp {
-			return true
-		}
-	}
-	return false
-}
-
-func checkGrammar(inp, correctAnswer string) bool {
-	if correctAnswer == "" && inp == "" {
-		return true
-
-	} else if inp == correctAnswer {
-		return true
-
-	} else {
-		inpSplitted := strings.Split(inp, ",")
-
-		for i := 0; i < len(inpSplitted); i++ {
-			if string(inpSplitted[i][0]) == " " {
-				inpSplitted[i] = inpSplitted[i][1:]
-			}
-		}
-
-		if strings.Join(inpSplitted, ",") == correctAnswer {
-			return true
-		}
-	}
-	return false
-}
-
 func main() {
-	setupUI()
+	setupMainUI()
 }
