@@ -201,7 +201,6 @@ func setupMainUI() {
 				openGeneratorBtn,
 			),
 		))
-
 	window.ShowAndRun()
 }
 

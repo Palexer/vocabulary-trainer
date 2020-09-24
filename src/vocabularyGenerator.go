@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -68,16 +67,16 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 		newJSONFile.Title = titleInput.Text
 
 		// remove spaces if necessary
-		if foreignWordInput.Text[(len(foreignWordInput.Text)-1):] == "" {
+		if foreignWordInput.Text[(len(foreignWordInput.Text)-1):] == " " {
 			foreignWordInput.Text = foreignWordInput.Text[:(len(foreignWordInput.Text) - 2)]
 		}
 
+		// append new vocabulary to struct
 		newJSONFile.Vocabulary = append(
 			newJSONFile.Vocabulary,
 			[]string{foreignWordInput.Text, correctTranslationInput.Text, correctGrammarInput.Text})
 
 		writeIndex++
-
 		foreignWordInput.SetText("")
 		correctGrammarInput.SetText("")
 		correctTranslationInput.SetText("")
@@ -121,7 +120,6 @@ func writeJSONFile(f fyne.URIWriteCloser) error {
 		return err
 	}
 
-	fmt.Println(f.URI().String()[7:])
 	err = ioutil.WriteFile(f.URI().String()[7:], encodedJSONFile, os.ModePerm)
 	if err != nil {
 		return err
