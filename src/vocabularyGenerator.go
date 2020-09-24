@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -54,23 +53,28 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 	titleInput := widget.NewEntry()
 	titleInput.SetPlaceHolder("Title")
 
-	correctForeignWordInput := widget.NewEntry()
+	foreignWordInput := widget.NewEntry()
 	correctTranslationInput := widget.NewEntry()
 	correctGrammarInput := widget.NewEntry()
 
-	correctForeignWordInput.SetPlaceHolder("Foreign Word")
+	foreignWordInput.SetPlaceHolder("Foreign Word")
 	correctTranslationInput.SetPlaceHolder("Translation")
 	correctGrammarInput.SetPlaceHolder("Grammar")
 
 	nextWordBtn := widget.NewButtonWithIcon("Next Word", theme.MailForwardIcon(), func() {
 		newJSONFile.Title = titleInput.Text
-		newJSONFile.Vocabulary[writeIndex][0] = correctForeignWordInput.Text
-		newJSONFile.Vocabulary[writeIndex][1] = correctTranslationInput.Text
-		newJSONFile.Vocabulary[writeIndex][2] = correctGrammarInput.Text
+
+		// remove spaces if necessary
+
+		newJSONFile.Vocabulary = append(
+			newJSONFile.Vocabulary,
+			[]string{foreignWordInput.Text, correctTranslationInput.Text, correctGrammarInput.Text})
+
 		writeIndex++
 
-		// test if it works
-		fmt.Println(newJSONFile)
+		foreignWordInput.SetText("")
+		correctGrammarInput.SetText("")
+		correctTranslationInput.SetText("")
 	})
 
 	backBtn := widget.NewButtonWithIcon("Remove last entry", theme.NavigateBackIcon(), func() {
@@ -86,13 +90,11 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 		widget.NewVBox(
 			saveFileBtn,
 			titleInput,
-			widget.NewHBox(
-				correctForeignWordInput,
-				layout.NewSpacer(),
-				correctTranslationInput,
-				layout.NewSpacer(),
-				correctGrammarInput,
-			),
+			layout.NewSpacer(),
+			foreignWordInput,
+			correctTranslationInput,
+			correctGrammarInput,
+			layout.NewSpacer(),
 			layout.NewSpacer(),
 			widget.NewHBox(
 				backBtn,
@@ -109,11 +111,14 @@ func writeJSONFile(f fyne.URIWriteCloser) error {
 		return errors.New("cancelled")
 	}
 
-	jsonFile, err := json.MarshalIndent(newJSONFile, "", " ")
+	jsonFile, err := json.Marshal(newJSONFile)
 	if err != nil {
 		return err
 	}
 
-	ioutil.WriteFile(f.Name()+".json", jsonFile, os.ModePerm)
+	err = ioutil.WriteFile(f.Name(), jsonFile, os.ModePerm)
+	if err != nil {
+		return err
+	}
 	return nil
 }
