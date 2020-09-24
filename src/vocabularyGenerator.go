@@ -3,12 +3,14 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
+	"fyne.io/fyne/storage"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
 )
@@ -47,6 +49,7 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 
 		}, windowVocGenerator)
 
+		saveFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
 		saveFileDialog.Show()
 	})
 
@@ -65,6 +68,9 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 		newJSONFile.Title = titleInput.Text
 
 		// remove spaces if necessary
+		if foreignWordInput.Text[(len(foreignWordInput.Text)-1):] == "" {
+			foreignWordInput.Text = foreignWordInput.Text[:(len(foreignWordInput.Text) - 2)]
+		}
 
 		newJSONFile.Vocabulary = append(
 			newJSONFile.Vocabulary,
@@ -102,7 +108,6 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 				nextWordBtn,
 			),
 		))
-
 	windowVocGenerator.Show()
 }
 
@@ -111,12 +116,13 @@ func writeJSONFile(f fyne.URIWriteCloser) error {
 		return errors.New("cancelled")
 	}
 
-	jsonFile, err := json.Marshal(newJSONFile)
+	encodedJSONFile, err := json.Marshal(newJSONFile)
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(f.Name(), jsonFile, os.ModePerm)
+	fmt.Println(f.URI().String()[7:])
+	err = ioutil.WriteFile(f.URI().String()[7:], encodedJSONFile, os.ModePerm)
 	if err != nil {
 		return err
 	}
