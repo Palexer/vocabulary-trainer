@@ -34,9 +34,10 @@ You then need to open the file with the Vocabulary Trainer and the program will 
 translation and, if you need to, also additional grammar. You can also enter multiple translations by separating them with a comma.
 Depending on the file, you may or may not need to insert a space after the comma (at least for now). The grammar should be entered completely and exactly like in the correct answer. If you entered your translation and grammar, click on the check button to see if you're input was correct. If this is not the case, you will now see the correct answer.  Click on "Continue" to go to the next word. The Vocabulary Trainer will count your correct answers as well as your already finished words while you are practicing.
 
-### Formatting JSON files
+### Creating JSON files
 
 You need to open a correctly formatted .json-file with the Vocabulary Trainer.
+**You can either use the Vocabulary Generator, that is built in to the Vocabulary Trainer (note 100% stable yet) or manually create one like shown below.**
 Here is an example of a correctly formatted .json-file:
 
 ```JSON
@@ -60,13 +61,12 @@ you have to put an empty string there (like in the last example above).
 
 ## ToDo
 
-- keep buttons disabled if no file was opened
 - improve restart
 - Icon
 - one try (counter variable)
-- application for creating correctly formatted json-files
 - choose random vocabulary
 - keyboard shortcuts
 - percentage at the end
 - dialog that shows wrong words at the end
 - fix correct words counter -> only on restart?
+- json-editor: improve indentation, automatically remove spaces
