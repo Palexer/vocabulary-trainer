@@ -63,7 +63,7 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 	correctTranslationInput.SetPlaceHolder("Translation")
 	correctGrammarInput.SetPlaceHolder("Grammar")
 
-	nextWordBtn := widget.NewButtonWithIcon("Next Word", theme.MailForwardIcon(), func() {
+	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), func() {
 		newJSONFile.Title = titleInput.Text
 
 		// remove spaces if necessary
@@ -104,7 +104,7 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 			widget.NewHBox(
 				backBtn,
 				layout.NewSpacer(),
-				nextWordBtn,
+				saveWordBtn,
 			),
 		))
 	windowVocGenerator.Show()
@@ -115,7 +115,7 @@ func writeJSONFile(f fyne.URIWriteCloser) error {
 		return errors.New("cancelled")
 	}
 
-	encodedJSONFile, err := json.Marshal(newJSONFile)
+	encodedJSONFile, err := json.MarshalIndent(newJSONFile, "", " ")
 	if err != nil {
 		return err
 	}
