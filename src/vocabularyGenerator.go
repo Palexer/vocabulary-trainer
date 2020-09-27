@@ -68,7 +68,24 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 
 		// remove spaces if necessary
 		if foreignWordInput.Text[(len(foreignWordInput.Text)-1):] == " " {
-			foreignWordInput.Text = foreignWordInput.Text[:(len(foreignWordInput.Text) - 2)]
+			foreignWordInput.Text = foreignWordInput.Text[:(len(foreignWordInput.Text) - 1)]
+		}
+		if foreignWordInput.Text[:1] == " " {
+			foreignWordInput.Text = foreignWordInput.Text[1:]
+		}
+
+		if correctTranslationInput.Text[(len(correctTranslationInput.Text)-1):] == " " {
+			correctTranslationInput.Text = foreignWordInput.Text[:(len(correctTranslationInput.Text) - 1)]
+		}
+		if correctTranslationInput.Text[:1] == " " {
+			correctTranslationInput.Text = correctTranslationInput.Text[1:]
+		}
+
+		if correctGrammarInput.Text[(len(correctGrammarInput.Text)-1):] == " " {
+			correctGrammarInput.Text = correctGrammarInput.Text[:(len(correctGrammarInput.Text) - 1)]
+		}
+		if correctGrammarInput.Text[:1] == " " {
+			correctGrammarInput.Text = correctGrammarInput.Text[1:]
 		}
 
 		// append new vocabulary to struct
