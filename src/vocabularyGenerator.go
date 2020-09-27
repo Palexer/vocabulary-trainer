@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
@@ -75,10 +76,19 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 		}
 
 		if correctTranslationInput.Text[(len(correctTranslationInput.Text)-1):] == " " {
-			correctTranslationInput.Text = foreignWordInput.Text[:(len(correctTranslationInput.Text) - 1)]
+			correctTranslationInput.Text = correctTranslationInput.Text[:(len(correctTranslationInput.Text) - 1)]
 		}
 		if correctTranslationInput.Text[:1] == " " {
 			correctTranslationInput.Text = correctTranslationInput.Text[1:]
+		}
+		// for loops don't work yet
+		for _, v := range strings.Split(correctTranslationInput.Text, ",") {
+			if v[(len(v)-1):] == " " {
+				v = v[:(len(v) - 1)]
+			}
+			if v[:1] == " " {
+				v = v[1:]
+			}
 		}
 
 		if correctGrammarInput.Text[(len(correctGrammarInput.Text)-1):] == " " {
@@ -86,6 +96,14 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 		}
 		if correctGrammarInput.Text[:1] == " " {
 			correctGrammarInput.Text = correctGrammarInput.Text[1:]
+		}
+		for _, v := range strings.Split(correctGrammarInput.Text, ",") {
+			if v[(len(v)-1):] == " " {
+				v = v[:(len(v) - 1)]
+			}
+			if v[:1] == " " {
+				v = v[1:]
+			}
 		}
 
 		// append new vocabulary to struct

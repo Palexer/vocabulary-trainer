@@ -22,10 +22,19 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
   ```bash
   sudo make install
   ```
+  
+  ### macOS
+
+- Currently, I can't support macOS. You can try to use the Windows .exe file with WINE on a Mac or you have to compile it yourself
 
 ### Compile it yourself
 
-coming soon
+1. Install the Go compiler
+2. Install the fyne GUI toolkit and its depedencies
+3. Clone this repository
+4. Run ```go build .``` in the src directory
+5. Run ```fyne package -os darwin -icon resources/Icon.png``` 
+    _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling, please take a look at fyne.io documentation._
 
 ## Usage
 
@@ -42,16 +51,28 @@ Here is an example of a correctly formatted .json-file:
 
 ```JSON
 {
-    "Title": "The title of the vocabulary",
-    "Vocabulary": [
-        ["here goes the foreign word", "and here the translation", "and here optional grammar"],
-        ["word in foreign language", "the user should input this", "the user has to input this in the grammar field"],
-        ["you can also use multiple options", "by,separating,them,with,a,comma,like,this", ""],
-    ]
+ "Title": "Test Title",
+ "Vocabulary": [
+  [
+   "foreign word 1",
+   "translation 1",
+   "grammar1"
+  ],
+  [
+   "foreign word 2",
+   "translation2,alternative translation2",
+   "grammar2,alternative grammar2"
+  ],
+  [
+  "foreign word 3",
+  "translation3",
+  ""
+  ]
+ ]
 }
 ```
 
-_Note: You are currently NOT allowed to have spaces after the commas in the .json-files._
+_Note: You are NOT allowed to have spaces after the commas in the .json-files._
 The last list entry is optional (additional grammar). If you don't use it for a word, 
 you have to put an empty string there (like in the last example above).
 
@@ -61,12 +82,19 @@ you have to put an empty string there (like in the last example above).
 
 ## ToDo
 
+### Improvements
+
 - improve restart
-- Icon
-- one try (counter variable)
-- choose random vocabulary
 - keyboard shortcuts
-- percentage at the end
-- dialog that shows wrong words at the end
+- Icon
 - fix correct words counter -> only on restart?
-- json-editor: improve indentation, automatically remove spaces
+
+### New Features
+
+- dialog that shows wrong words at the end
+
+- one try (counter variable)
+
+- choose random vocabulary
+
+- percentage at the end
