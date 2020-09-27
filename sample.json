@@ -1,8 +1,0 @@
-{
-    "Title": "Test File",
-    "Vocabulary": [
-        ["Test1", "translate1,orThisOne", "grammar1"],
-        ["Test3", "translate2", "grammar2,andAnotherOne"],
-        ["Test3", "translate3,this", "grammar3,oneMore"]
-    ]
-}
