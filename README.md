@@ -18,12 +18,11 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 - After that, open a terminal in the folder, that contains the "Makefile"
 
 - Execute the following command:
-  
   ```bash
   sudo make install
   ```
-  
-  ### macOS
+
+### macOS
 
 - Currently, I can't support macOS. You can try to use the Windows .exe file with WINE on a Mac or you have to compile it yourself
 
