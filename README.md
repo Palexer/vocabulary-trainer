@@ -85,7 +85,6 @@ you have to put an empty string there (like in the last example above).
 
 - improve restart
 - keyboard shortcuts
-- Icon
 - fix correct words counter -> only on restart?
 
 ### New Features

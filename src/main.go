@@ -30,8 +30,14 @@ var (
 
 func setupMainUI() {
 	app := app.New()
-	// app.SetIcon()
 	window := app.NewWindow("Vocabulary Trainer")
+
+	icon, err := fyne.LoadResourceFromPath("resources/icon.png")
+	if err != nil {
+		dialog.ShowError(err, window)
+	}
+	window.SetIcon(icon)
+
 	window.Resize(fyne.Size{
 		Width:  800,
 		Height: 600,
@@ -75,6 +81,7 @@ func setupMainUI() {
 								vocabularyFile.Vocabulary[i][j] = ""
 							}
 						}
+
 					} else {
 						foreignWord.SetText("")
 						openFileToUseProgram = true
