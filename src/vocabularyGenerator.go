@@ -5,7 +5,6 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
-	"strings"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
@@ -67,49 +66,25 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), func() {
 		newJSONFile.Title = titleInput.Text
 
+		vocabularyInputs := []string{foreignWordInput.Text, correctTranslationInput.Text, correctGrammarInput.Text}
+		vocabularyInputsFinished := []string{}
+
 		// remove spaces if necessary
-		if foreignWordInput.Text[(len(foreignWordInput.Text)-1):] == " " {
-			foreignWordInput.Text = foreignWordInput.Text[:(len(foreignWordInput.Text) - 1)]
-		}
-		if foreignWordInput.Text[:1] == " " {
-			foreignWordInput.Text = foreignWordInput.Text[1:]
-		}
-
-		if correctTranslationInput.Text[(len(correctTranslationInput.Text)-1):] == " " {
-			correctTranslationInput.Text = correctTranslationInput.Text[:(len(correctTranslationInput.Text) - 1)]
-		}
-		if correctTranslationInput.Text[:1] == " " {
-			correctTranslationInput.Text = correctTranslationInput.Text[1:]
-		}
-		// for loops don't work yet
-		for _, v := range strings.Split(correctTranslationInput.Text, ",") {
-			if v[(len(v)-1):] == " " {
-				v = v[:(len(v) - 1)]
+		for _, input := range vocabularyInputs {
+			if foreignWordInput.Text[(len(input)-1):] == " " {
+				input = input[:(len(input) - 1)]
 			}
-			if v[:1] == " " {
-				v = v[1:]
+			if foreignWordInput.Text[:1] == " " {
+				input = input[1:]
 			}
-		}
-
-		if correctGrammarInput.Text[(len(correctGrammarInput.Text)-1):] == " " {
-			correctGrammarInput.Text = correctGrammarInput.Text[:(len(correctGrammarInput.Text) - 1)]
-		}
-		if correctGrammarInput.Text[:1] == " " {
-			correctGrammarInput.Text = correctGrammarInput.Text[1:]
-		}
-		for _, v := range strings.Split(correctGrammarInput.Text, ",") {
-			if v[(len(v)-1):] == " " {
-				v = v[:(len(v) - 1)]
-			}
-			if v[:1] == " " {
-				v = v[1:]
-			}
+			// append improved words to new slice
+			vocabularyInputsFinished = append(vocabularyInputsFinished, input)
 		}
 
 		// append new vocabulary to struct
 		newJSONFile.Vocabulary = append(
 			newJSONFile.Vocabulary,
-			[]string{foreignWordInput.Text, correctTranslationInput.Text, correctGrammarInput.Text})
+			vocabularyInputsFinished)
 
 		writeIndex++
 		foreignWordInput.SetText("")
@@ -146,6 +121,10 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 }
 
 func writeJSONFile(f fyne.URIWriteCloser) error {
+	if f.URI().Extension() != ".json" {
+		return errors.New("the vocabulary files need the .json extension")
+	}
+
 	if f == nil {
 		return errors.New("cancelled")
 	}

@@ -29,7 +29,7 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 ### Compile it yourself
 
 1. Install the Go compiler
-2. Install the fyne GUI toolkit and its depedencies
+2. Install the fyne GUI toolkit and its dependencies
 3. Clone this repository
 4. Run ```go build .``` in the src directory
 5. Run ```fyne package -os darwin -icon resources/Icon.png``` 
@@ -91,9 +91,6 @@ you have to put an empty string there (like in the last example above).
 ### New Features
 
 - dialog that shows wrong words at the end
-
 - one try (counter variable)
-
 - choose random vocabulary
-
 - percentage at the end

@@ -21,10 +21,11 @@ type vocabulary struct {
 }
 
 var (
-	vocabularyFile vocabulary
-	index          int
-	correct        int
-	didCheck       bool
+	vocabularyFile       vocabulary
+	index                int
+	correct              int
+	didCheck             bool
+	openFileToUseProgram bool = true
 )
 
 func setupMainUI() {
@@ -48,6 +49,10 @@ func setupMainUI() {
 	inputGrammar.SetPlaceHolder("Grammar")
 
 	continueButton := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
+		if openFileToUseProgram == true {
+			return
+		}
+
 		if index+1 == len(vocabularyFile.Vocabulary) {
 			doneDialog := dialog.NewConfirm(
 				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(index+1)+"\n Restart?",
@@ -58,6 +63,7 @@ func setupMainUI() {
 					finishedCounter.SetText("")
 					inputGrammar.SetText("")
 					inputTranslation.SetText("")
+					result.SetText("")
 
 					if restart == true {
 						foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
@@ -71,7 +77,7 @@ func setupMainUI() {
 						}
 					} else {
 						foreignWord.SetText("")
-						// disable buttons
+						openFileToUseProgram = true
 					}
 				}, window)
 
@@ -98,8 +104,12 @@ func setupMainUI() {
 	})
 
 	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
+		if openFileToUseProgram == true {
+			return
+		}
+
 		if inputTranslation.Text == "" || inputGrammar.Text == "" && vocabularyFile.Vocabulary[index][2] != "" {
-			dialog.ShowError(errors.New("please enter a translation first"), window)
+			dialog.ShowError(errors.New("please enter a translation / the grammar first"), window)
 			return
 		}
 
@@ -152,6 +162,7 @@ func setupMainUI() {
 			correctCounter.SetText("")
 			finishedCounter.SetText("")
 			index, correct = 0, 0
+			openFileToUseProgram = false
 
 			title.SetText(vocabularyFile.Title)
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
