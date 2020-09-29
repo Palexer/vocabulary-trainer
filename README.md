@@ -83,9 +83,7 @@ you have to put an empty string there (like in the last example above).
 
 ### Improvements
 
-- improve restart
 - keyboard shortcuts
-- fix correct words counter -> only on restart?
 
 ### New Features
 

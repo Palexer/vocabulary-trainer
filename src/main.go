@@ -72,15 +72,8 @@ func setupMainUI() {
 					result.SetText("")
 
 					if restart == true {
+						correct, index = 0, 0
 						foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
-
-						// make everything an empty string in vocabularyFile
-						vocabularyFile.Title = ""
-						for i := 0; i < len(vocabularyFile.Vocabulary); i++ {
-							for j := 0; j < len(vocabularyFile.Vocabulary[i]); j++ {
-								vocabularyFile.Vocabulary[i][j] = ""
-							}
-						}
 
 					} else {
 						foreignWord.SetText("")
@@ -99,14 +92,13 @@ func setupMainUI() {
 			index++
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
-			finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocabularyFile.Vocabulary)))
-			correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index))
-
 			// cleanup
 			inputTranslation.SetText("")
 			inputGrammar.SetText("")
 			result.SetText("")
 		}
+		finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocabularyFile.Vocabulary)))
+		correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index))
 		didCheck = false
 	})
 

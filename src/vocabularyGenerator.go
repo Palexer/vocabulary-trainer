@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
@@ -71,15 +72,33 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 		vocabularyInputsFinished := []string{}
 
 		// remove spaces if necessary
-		for _, input := range vocabularyInputs {
-			if foreignWordInput.Text[(len(input)-1):] == " " {
-				input = input[:(len(input) - 1)]
+		for i, input := range vocabularyInputs {
+			editedText := []string{}
+
+			if i > 0 {
+				for _, word := range strings.Split(input, ",") {
+					if strings.HasPrefix(word, " ") {
+						word = strings.TrimPrefix(word, " ")
+					}
+
+					if strings.HasSuffix(word, " ") {
+						word = strings.TrimSuffix(word, " ")
+					}
+
+					editedText = append(editedText, word)
+				}
+
+			} else {
+				if strings.HasPrefix(input, " ") {
+					input = strings.TrimPrefix(input, " ")
+				}
+				if strings.HasSuffix(input, " ") {
+					input = strings.TrimSuffix(input, " ")
+				}
+				editedText = []string{input}
 			}
-			if foreignWordInput.Text[:1] == " " {
-				input = input[1:]
-			}
-			// append improved words to new slice
-			vocabularyInputsFinished = append(vocabularyInputsFinished, input)
+			vocabularyInputsFinished = append(vocabularyInputsFinished, strings.Join(editedText, ","))
+
 		}
 
 		// append new vocabulary to struct
