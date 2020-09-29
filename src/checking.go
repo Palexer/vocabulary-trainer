@@ -3,25 +3,30 @@ package main
 import "strings"
 
 // CheckTranslation checks the translation entered by the user against the right answer from the .json file
-func CheckTranslation(inp, correctAnswer string) bool {
-	if inp == correctAnswer {
+func CheckTranslation(input, correctAnswer string) bool {
+	if input == correctAnswer {
 		return true
 	}
 
-	inpSplitted := strings.Split(inp, ",")
+	editedInput := []string{}
 
-	for i := 0; i < len(inpSplitted); i++ {
-		if string(inpSplitted[i][0]) == " " {
-			inpSplitted[i] = inpSplitted[i][1:]
+	for _, word := range strings.Split(input, ",") {
+		if strings.HasSuffix(word, " ") {
+			word = strings.TrimSuffix(word, " ")
 		}
+
+		if strings.HasPrefix(word, " ") {
+			word = strings.TrimPrefix(word, " ")
+		}
+		editedInput = append(editedInput, word)
 	}
 
-	if strings.Join(inpSplitted, ",") == correctAnswer {
+	if strings.Join(editedInput, ",") == correctAnswer {
 		return true
 	}
 
 	for _, answer := range strings.Split(correctAnswer, ",") {
-		if answer == inp {
+		if answer == input {
 			return true
 		}
 	}
@@ -29,23 +34,28 @@ func CheckTranslation(inp, correctAnswer string) bool {
 }
 
 // CheckGrammar checks the translation entered by the user against the right answer from the .json file
-func CheckGrammar(inp, correctAnswer string) bool {
-	if correctAnswer == "" && inp == "" {
+func CheckGrammar(input, correctAnswer string) bool {
+	if correctAnswer == "" && input == "" {
 		return true
 
-	} else if inp == correctAnswer {
+	} else if input == correctAnswer {
 		return true
 
 	} else {
-		inpSplitted := strings.Split(inp, ",")
+		editedInput := []string{}
 
-		for i := 0; i < len(inpSplitted); i++ {
-			if string(inpSplitted[i][0]) == " " {
-				inpSplitted[i] = inpSplitted[i][1:]
+		for _, word := range strings.Split(input, ",") {
+			if strings.HasSuffix(word, " ") {
+				word = strings.TrimSuffix(word, " ")
 			}
+
+			if strings.HasPrefix(word, " ") {
+				word = strings.TrimPrefix(word, " ")
+			}
+			editedInput = append(editedInput, word)
 		}
 
-		if strings.Join(inpSplitted, ",") == correctAnswer {
+		if strings.Join(editedInput, ",") == correctAnswer {
 			return true
 		}
 	}
