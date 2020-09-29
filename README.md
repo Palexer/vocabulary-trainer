@@ -81,12 +81,9 @@ you have to put an empty string there (like in the last example above).
 
 ## ToDo
 
-### Improvements
-
-- keyboard shortcuts
-
 ### New Features
 
+- keyboard shortcuts 
 - dialog that shows wrong words at the end
 - one try (counter variable)
 - choose random vocabulary

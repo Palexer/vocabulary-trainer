@@ -26,6 +26,7 @@ var (
 	correct              int
 	didCheck             bool
 	openFileToUseProgram bool = true
+	userHasTry           bool = true
 	// Icon represents the app icon for every window
 	Icon, err = fyne.LoadResourceFromPath("resources/icon.png")
 )
@@ -43,6 +44,7 @@ func setupMainUI() {
 		Height: 600,
 	})
 
+	// create input fields and labels
 	title := widget.NewLabel("")
 	foreignWord := widget.NewLabel("")
 	result := widget.NewLabel("")
@@ -64,7 +66,6 @@ func setupMainUI() {
 				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(index+1)+"\n Restart?",
 				func(restart bool) {
 					index, correct = 0, 0
-
 					correctCounter.SetText("")
 					finishedCounter.SetText("")
 					inputGrammar.SetText("")
@@ -80,7 +81,6 @@ func setupMainUI() {
 						openFileToUseProgram = true
 					}
 				}, window)
-
 			doneDialog.Show()
 
 		} else {
@@ -99,11 +99,16 @@ func setupMainUI() {
 		}
 		finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocabularyFile.Vocabulary)))
 		correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index))
-		didCheck = false
+		didCheck, userHasTry = false, true
 	})
 
 	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
 		if openFileToUseProgram == true {
+			return
+		}
+
+		if userHasTry == false {
+			dialog.ShowError(errors.New("you already checked your input"), window)
 			return
 		}
 
@@ -132,7 +137,7 @@ func setupMainUI() {
 			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
 			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
 		}
-		didCheck = true
+		didCheck, userHasTry = true, false
 	})
 
 	openButton := widget.NewButtonWithIcon("Open File", theme.FolderOpenIcon(), func() {
