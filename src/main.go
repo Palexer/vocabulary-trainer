@@ -28,17 +28,13 @@ var (
 	openFileToUseProgram bool = true
 	userHasTry           bool = true
 	// Icon represents the app icon for every window
-	Icon, err = fyne.LoadResourceFromPath("resources/icon.png")
 )
 
 func setupMainUI() {
 	app := app.New()
 	window := app.NewWindow("Vocabulary Trainer")
-	if err != nil {
-		dialog.ShowError(err, window)
-	}
-	window.SetIcon(Icon)
 
+	window.SetIcon(resourceIconPng)
 	window.Resize(fyne.Size{
 		Width:  800,
 		Height: 600,

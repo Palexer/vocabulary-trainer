@@ -30,7 +30,7 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 		Width:  600,
 		Height: 440,
 	})
-	windowVocGenerator.SetIcon(Icon)
+	windowVocGenerator.SetIcon(resourceIconPng)
 
 	saveFileBtn := widget.NewButtonWithIcon("Save File", theme.DocumentSaveIcon(), func() {
 		saveFileDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
