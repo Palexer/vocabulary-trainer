@@ -32,14 +32,21 @@ var (
 )
 
 func setupMainUI() {
-
 	window := App.NewWindow("Vocabulary Trainer")
-
 	window.SetIcon(resourceIconPng)
 	window.Resize(fyne.Size{
 		Width:  800,
 		Height: 600,
 	})
+
+	// load settings
+	// set correct theme
+	switch App.Preferences().String("Theme") {
+	case "Dark":
+		App.Settings().SetTheme(theme.DarkTheme())
+	case "Light":
+		App.Settings().SetTheme(theme.LightTheme())
+	}
 
 	// create input fields and labels
 	title := widget.NewLabel("")
