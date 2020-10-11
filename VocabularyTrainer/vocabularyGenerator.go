@@ -24,8 +24,8 @@ var newJSONFile jsonFile
 var writeIndex int
 
 // SetupUIVocabularyGenerator builds up the UI for the vocabulary generator
-func SetupUIVocabularyGenerator(parentApp fyne.App) {
-	windowVocGenerator := parentApp.NewWindow("Vocabulary Generator")
+func SetupUIVocabularyGenerator() {
+	windowVocGenerator := App.NewWindow("Vocabulary Generator")
 	windowVocGenerator.Resize(fyne.Size{
 		Width:  600,
 		Height: 440,

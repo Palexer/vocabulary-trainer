@@ -27,11 +27,13 @@ var (
 	didCheck             bool
 	openFileToUseProgram bool = true
 	userHasTry           bool = true
+	// App is the main application, that contains all windows.
+	App fyne.App = app.NewWithID("com.palexer.vocabularytrainer")
 )
 
 func setupMainUI() {
-	app := app.NewWithID("com.palexer.vocabularytrainer")
-	window := app.NewWindow("Vocabulary Trainer")
+
+	window := App.NewWindow("Vocabulary Trainer")
 
 	window.SetIcon(resourceIconPng)
 	window.Resize(fyne.Size{
@@ -177,16 +179,12 @@ func setupMainUI() {
 	inputGrammar.Disable()
 	inputTranslation.Disable()
 
-	lightThemeBtn := widget.NewButton("Light Theme", func() {
-		app.Settings().SetTheme(theme.LightTheme())
-	})
-
-	darkThemeBtn := widget.NewButton("Dark Theme", func() {
-		app.Settings().SetTheme(theme.DarkTheme())
+	settingsButton := widget.NewButtonWithIcon("Settings", theme.SettingsIcon(), func() {
+		SetupUISettings()
 	})
 
 	openGeneratorBtn := widget.NewButtonWithIcon("Vocabulary Generator", theme.FileApplicationIcon(), func() {
-		SetupUIVocabularyGenerator(fyne.CurrentApp())
+		SetupUIVocabularyGenerator()
 	})
 
 	window.SetContent(
@@ -205,8 +203,7 @@ func setupMainUI() {
 			finishedCounter,
 			layout.NewSpacer(),
 			widget.NewHBox(
-				lightThemeBtn,
-				darkThemeBtn,
+				settingsButton,
 				layout.NewSpacer(),
 				openGeneratorBtn,
 			),
