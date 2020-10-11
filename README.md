@@ -89,4 +89,3 @@ you have to put an empty string there (like in the last example above).
 - dialog that shows wrong words at the end
 - choose random vocabulary
 - percentage at the end
-- settings dialog using fyne preferences API

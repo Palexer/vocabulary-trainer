@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"runtime"
 	"strconv"
 
 	"fyne.io/fyne"
@@ -191,6 +192,10 @@ func setupMainUI() {
 	})
 
 	openGeneratorBtn := widget.NewButtonWithIcon("Vocabulary Generator", theme.FileApplicationIcon(), func() {
+		if runtime.GOOS == "android" {
+			dialog.ShowError(errors.New("the vocabulary generator is not support on mobile operating systems"), window)
+			return
+		}
 		SetupUIVocabularyGenerator()
 	})
 
