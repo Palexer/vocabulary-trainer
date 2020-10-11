@@ -27,11 +27,10 @@ var (
 	didCheck             bool
 	openFileToUseProgram bool = true
 	userHasTry           bool = true
-	// Icon represents the app icon for every window
 )
 
 func setupMainUI() {
-	app := app.New()
+	app := app.NewWithID("com.palexer.vocabularytrainer")
 	window := app.NewWindow("Vocabulary Trainer")
 
 	window.SetIcon(resourceIconPng)

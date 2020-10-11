@@ -13,8 +13,11 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 ### Linux
 
 - Download the .tar.gz package from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and extract it.
+
 - After that, open a terminal in the folder, that contains the "Makefile"
+
 - Execute the following command:
+  
   ```bash
   sudo make install
   ```
@@ -29,7 +32,7 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 2. Install the fyne GUI toolkit and its dependencies.
 3. Clone this repository.
 4. Run ```go build .``` in the src directory.
-5. Run ```fyne package -os darwin -icon resources/Icon.png``` 
+5. Run ```fyne package -os darwin -icon resources/icon.png``` 
     _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling, please take a look at the fyne.io documentation._
 
 ## Usage
@@ -78,9 +81,12 @@ you have to put an empty string there (like in the last example above).
 
 ## ToDo
 
+- Android support (own repository?)
+
 ### New Features
 
 - keyboard shortcuts 
 - dialog that shows wrong words at the end
 - choose random vocabulary
 - percentage at the end
+- settings dialog using fyne preferences API

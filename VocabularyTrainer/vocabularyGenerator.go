@@ -98,7 +98,6 @@ func SetupUIVocabularyGenerator(parentApp fyne.App) {
 				editedText = []string{input}
 			}
 			vocabularyInputsFinished = append(vocabularyInputsFinished, strings.Join(editedText, ","))
-
 		}
 
 		// append new vocabulary to struct
