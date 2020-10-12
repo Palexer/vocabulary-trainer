@@ -6,11 +6,6 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-var (
-	// ThemeSelector represents the dropdown select menu for the theme in the settings dialog
-	ThemeSelector widget.Select
-)
-
 // SetupUISettings creates the settings dialog for the application
 func SetupUISettings() {
 	windowSettings := App.NewWindow("Settings")
@@ -21,7 +16,7 @@ func SetupUISettings() {
 
 	settingsLabel := widget.NewLabel("Settings")
 	themeSelectorLabel := widget.NewLabel("Theme")
-	ThemeSelector := widget.NewSelect([]string{"Light", "Dark"}, func(selectedTheme string) {
+	themeSelector := widget.NewSelect([]string{"Light", "Dark"}, func(selectedTheme string) {
 		switch selectedTheme {
 		case "Light":
 			App.Settings().SetTheme(theme.LightTheme())
@@ -32,14 +27,14 @@ func SetupUISettings() {
 		App.Preferences().SetString("Theme", selectedTheme)
 	})
 
-	ThemeSelector.SetSelected(App.Preferences().StringWithFallback("Theme", "Dark"))
+	themeSelector.SetSelected(App.Preferences().StringWithFallback("Theme", "Dark"))
 
 	windowSettings.SetContent(
 		widget.NewVBox(
 			settingsLabel,
 			widget.NewHBox(
 				themeSelectorLabel,
-				ThemeSelector,
+				themeSelector,
 			),
 		))
 	windowSettings.Show()
