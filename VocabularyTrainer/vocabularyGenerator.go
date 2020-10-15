@@ -141,7 +141,7 @@ func SetupUIVocabularyGenerator() {
 
 func writeJSONFile(f fyne.URIWriteCloser) error {
 	if f.URI().Extension() != ".json" {
-		return errors.New("the vocabulary files need the .json extension")
+		return errors.New("the vocabulary files needs the .json file extension")
 	}
 
 	if f == nil {

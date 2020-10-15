@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"runtime"
 	"strconv"
+	"strings"
 
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
@@ -25,6 +26,7 @@ var (
 	vocabularyFile       vocabulary
 	index                int
 	correct              int
+	wrongWordsList       [][]string
 	didCheck             bool
 	openFileToUseProgram bool = true
 	userHasTry           bool = true
@@ -85,7 +87,21 @@ func setupMainUI() {
 						foreignWord.SetText("")
 						openFileToUseProgram = true
 					}
+
+					// append wrong words to a string
+					var wrongWords string
+					for i := range wrongWordsList {
+						wrongWords = wrongWords + "\n" + strings.Join(wrongWordsList[i], " - ")
+					}
+
+					if len(wrongWordsList) == 0 {
+						dialog.NewInformation("Wrong Words", "You entered everything correctly.", window)
+					} else {
+						dialog.NewInformation("Wrong Words", "You didn't know the solution to the following words:\n"+wrongWords, window)
+					}
+
 				}, window)
+
 			doneDialog.Show()
 
 		} else {
@@ -131,14 +147,17 @@ func setupMainUI() {
 
 		} else if CheckTranslation {
 			result.SetText("Partly correct")
+			wrongWordsList = append(wrongWordsList, vocabularyFile.Vocabulary[index])
 			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
 
 		} else if CheckGrammar {
 			result.SetText("Partly correct")
+			wrongWordsList = append(wrongWordsList, vocabularyFile.Vocabulary[index])
 			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
 
 		} else {
 			result.SetText("Wrong")
+			wrongWordsList = append(wrongWordsList, vocabularyFile.Vocabulary[index])
 			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
 			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
 		}
@@ -193,7 +212,7 @@ func setupMainUI() {
 
 	openGeneratorBtn := widget.NewButtonWithIcon("Vocabulary Generator", theme.FileApplicationIcon(), func() {
 		if runtime.GOOS == "android" {
-			dialog.ShowError(errors.New("the vocabulary generator is not support on mobile operating systems"), window)
+			dialog.ShowError(errors.New("the vocabulary generator\n is not support on mobile\n operating systems"), window)
 			return
 		}
 		SetupUIVocabularyGenerator()
