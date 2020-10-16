@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"math"
 	"runtime"
 	"strconv"
 	"strings"
@@ -69,8 +70,9 @@ func setupMainUI() {
 		}
 
 		if index+1 == len(vocabularyFile.Vocabulary) {
+			var percentage float64 = math.Round((float64(correct)/float64(len(vocabularyFile.Vocabulary))*100.0)*100) / 100
 			doneDialog := dialog.NewConfirm(
-				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(index+1)+"\n Restart?",
+				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(index+1)+"("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+"\n Restart?",
 				func(restart bool) {
 					index, correct = 0, 0
 					correctCounter.SetText("")
@@ -85,6 +87,7 @@ func setupMainUI() {
 
 					} else {
 						foreignWord.SetText("")
+						title.SetText("")
 						openFileToUseProgram = true
 					}
 
