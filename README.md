@@ -81,12 +81,11 @@ you have to put an empty string there (like in the last example above).
 
 ## ToDo
 
-- Android support
+- Android + macOS support
 
 ### New Features
 
 - keyboard shortcuts 
-- dialog that shows wrong words at the end
 - choose random vocabulary
-- percentage at the end
 - text-to-speech: https://golangr.com/text-to-speech/
+
