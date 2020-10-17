@@ -82,6 +82,7 @@ you have to put an empty string there (like in the last example above).
 ## ToDo
 
 - Android + macOS support
+- new language: German
 
 ### New Features
 
