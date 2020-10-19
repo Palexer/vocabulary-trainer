@@ -27,7 +27,8 @@ Please note, that the focus is not on mobile, that's why the Android version isn
 
 ### macOS
 
-- Download the .app file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and drag it into your applications folder. You can now execute it. _(Alternatively you can directly execute the file from anywhere)_
+- Download the .app file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and unzip it. You can now drag it into your applications folder and execute it. 
+_(Alternatively you can directly execute the file from anywhere)_
 
 ## Android
 
