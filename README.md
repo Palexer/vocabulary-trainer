@@ -8,7 +8,7 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 
 ### Windows
 
-- Download the exe file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and execute it.
+- Download the .exe file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and execute it.
 
 ### Linux
 
@@ -24,14 +24,19 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 
 ### macOS
 
-- Currently, I can't support macOS. You can try to use the Windows .exe file with WINE on a Mac or you have to compile it yourself
+- Download the .app file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and drag it into you applications folder. 
+You can now execute it.
+
+## Android
+
+- Download the .apk file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and install it on your Android device. 
 
 ### Compile it yourself
 
 1. Install the Go compiler.
 2. Install the fyne GUI toolkit and its dependencies.
 3. Clone this repository.
-4. Run ```go build .``` in the src directory.
+4. Run ```go build .``` in the VocabularyTrainer directory.
 5. Run ```fyne package -os darwin -icon resources/icon.png``` 
     _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling, please take a look at the fyne.io documentation._
 
@@ -78,6 +83,10 @@ you have to put an empty string there (like in the last example above).
 ## License
 
 - GPL v3
+
+## Help
+
+If you have any problems with the program or the repository you can create an [issue](https://github.com/Palexer/vocabulary-trainer/issues) on the Github page.
 
 ## ToDo
 
