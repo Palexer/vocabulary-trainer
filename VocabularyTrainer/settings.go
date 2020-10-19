@@ -46,6 +46,7 @@ func SetupUISettings() {
 			layout.NewSpacer(),
 			widget.NewHBox(
 				githubLink,
+				layout.NewSpacer(),
 				license,
 			),
 		))
