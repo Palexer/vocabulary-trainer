@@ -88,5 +88,6 @@ you have to put an empty string there (like in the last example above).
 
 - keyboard shortcuts 
 - choose random vocabulary
+- switch vocabulary
 - text-to-speech: https://golangr.com/text-to-speech/
 
