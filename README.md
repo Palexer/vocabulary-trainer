@@ -24,8 +24,7 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 
 ### macOS
 
-- Download the .app file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and drag it into you applications folder. 
-You can now execute it.
+- Download the .app file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and drag it into your applications folder. You can now execute it. _(Alternatively you can directly execute the file from anywhere)_
 
 ## Android
 
@@ -38,24 +37,23 @@ You can now execute it.
 3. Clone this repository.
 4. Run ```go build .``` in the VocabularyTrainer directory.
 5. Run ```fyne package -os darwin -icon resources/icon.png``` 
-    _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling, please take a look at the fyne.io documentation._
+    _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling as well as compiling for Android, please take a look at the fyne.io documentation._
 
 ## Usage
 
 In order to use the Vocabulary Trainer you need a correctly formatted .json-file. You can see how to create one down below.
-You then need to open the file with the Vocabulary Trainer and the program will show you the first foreign word. Enter a 
-translation and, if you need to, also additional grammar. You can also enter multiple translations by separating them with a comma.
+You then need to open the file with the Vocabulary Trainer and the program will show you the first foreign word. Enter a translation and, if you need to, also additional grammar. You can also enter multiple translations by separating them with a comma.
 The grammar has to be entered completely. If you entered your translation and grammar, click on the check button to see if you're input was correct. If this is not the case, you will now see the correct answer.  Click on "Continue" to go to the next word. The Vocabulary Trainer will count your correct answers as well as your already finished words while you are practicing.
 
 ### Creating JSON files
 
 You need to open a correctly formatted .json-file with the Vocabulary Trainer.
-**You can either use the Vocabulary Generator, that is built in to the Vocabulary Trainer (note 100% stable yet) or manually create one like shown below.**
+**You can either use the Vocabulary Generator, that is built in to the Vocabulary Trainer, or manually create one like shown below.**
 Here is an example of a correctly formatted .json-file:
 
 ```JSON
 {
- "Title": "Test Title",
+ "Title": "Test File",
  "Vocabulary": [
   [
    "foreign word 1",
@@ -90,13 +88,8 @@ If you have any problems with the program or the repository you can create an [i
 
 ## ToDo
 
-- Android + macOS support
-- new language: German
-
-### New Features
-
 - keyboard shortcuts 
 - choose random vocabulary
-- switch vocabulary
+- switch languages
+- German language support
 - text-to-speech: https://golangr.com/text-to-speech/
-
