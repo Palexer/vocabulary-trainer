@@ -6,9 +6,12 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 
 ## Installation
 
+The VocabularyTrainer is currently available for Windows, macOS, Linux and Android. 
+Please note, that the focus is not on mobile, that's why the Android version isn't that polished.
+
 ### Windows
 
-- Download the .exe file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and execute it.
+- Download the .exe.zip file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases), unzip it and execute the .exe file it.
 
 ### Linux
 
