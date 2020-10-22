@@ -93,7 +93,6 @@ If you have any problems with the program or the repository you can create an [i
 ## ToDo
 
 - keyboard shortcuts 
-- choose random vocabulary
 - switch languages
 - German language support
 - text-to-speech: https://golangr.com/text-to-speech/
