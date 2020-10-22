@@ -34,7 +34,7 @@ func SetupUISettings() {
 	themeSelector.SetSelected(App.Preferences().StringWithFallback("Theme", "Dark"))
 
 	githubLink := widget.NewHyperlink("More information on Github", parseURL("https://github.com/Palexer/vocabulary-trainer"))
-	license := widget.NewHyperlink("License: GPLv3", parseURL("https://raw.githubusercontent.com/Palexer/vocabulary-trainer/master/LICENSE"))
+	license := widget.NewLabel("License: GPLv3")
 
 	windowSettings.SetContent(
 		widget.NewVBox(

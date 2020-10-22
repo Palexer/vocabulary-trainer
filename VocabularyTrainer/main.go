@@ -103,7 +103,7 @@ func main() {
 		if index+1 == len(vocabularyFile.Vocabulary) && random != true {
 
 			// calculate the percentage of correct answers
-			var percentage float64 = math.Round((float64(correct)/float64(len(vocabularyFile.Vocabulary))*100.0)*100) / 100
+			var percentage float64 = math.Round((float64(correct)/float64(finishedWords+1)*100.0)*100) / 100
 			doneDialog := dialog.NewConfirm(
 				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(finishedWords+1)+"("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+"\n Restart?",
 				func(restart bool) {
@@ -255,7 +255,7 @@ func main() {
 	inputGrammar.Disable()
 	inputTranslation.Disable()
 
-	settingsButton := widget.NewButtonWithIcon("Settings", theme.SettingsIcon(), func() {
+	settingsButton := widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
 		SetupUISettings()
 	})
 
