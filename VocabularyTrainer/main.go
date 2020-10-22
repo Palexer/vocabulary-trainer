@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"math"
+	"math/rand"
 	"runtime"
 	"strconv"
 	"strings"
@@ -26,16 +27,45 @@ type vocabulary struct {
 var (
 	vocabularyFile       vocabulary
 	index                int
+	finishedWords        int
 	correct              int
 	wrongWordsList       [][]string
 	didCheck             bool
 	openFileToUseProgram bool = true
 	userHasTry           bool = true
+	random               bool
 	// App is the main application, that contains all windows.
 	App fyne.App = app.NewWithID("com.palexer.vocabularytrainer")
 )
 
-func setupMainUI() {
+func fileOpened(f fyne.URIReadCloser) error {
+	if f == nil {
+		return errors.New("cancelled")
+	}
+
+	byteData, err := ioutil.ReadAll(f)
+	if err != nil {
+		return err
+	}
+	if byteData == nil {
+		return errors.New("the file does not have any content")
+	}
+
+	json.Unmarshal(byteData, &vocabularyFile)
+
+	if len(vocabularyFile.Vocabulary) == 0 {
+		return errors.New("the file does not contain any vocabulary or is not correctly formatted")
+	}
+
+	for i := 0; i < len(vocabularyFile.Vocabulary); i++ {
+		if len(vocabularyFile.Vocabulary[i]) != 3 {
+			return errors.New("the file contains vocabulary with too many or too less arguments (error in list item " + strconv.Itoa(i+1) + " )")
+		}
+	}
+	return nil
+}
+
+func main() {
 	window := App.NewWindow("Vocabulary Trainer")
 	window.SetIcon(resourceIconPng)
 	window.Resize(fyne.Size{
@@ -54,7 +84,7 @@ func setupMainUI() {
 
 	// create input fields and labels
 	title := widget.NewLabel("")
-	foreignWord := widget.NewLabel("")
+	foreignWord := widget.NewLabelWithStyle("", fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
 	result := widget.NewLabel("")
 	correctCounter := widget.NewLabel("")
 	finishedCounter := widget.NewLabel("")
@@ -69,12 +99,15 @@ func setupMainUI() {
 			return
 		}
 
-		if index+1 == len(vocabularyFile.Vocabulary) {
+		// done dialog
+		if index+1 == len(vocabularyFile.Vocabulary) && random != true {
+
+			// calculate the percentage of correct answers
 			var percentage float64 = math.Round((float64(correct)/float64(len(vocabularyFile.Vocabulary))*100.0)*100) / 100
 			doneDialog := dialog.NewConfirm(
-				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(index+1)+"("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+"\n Restart?",
+				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(finishedWords+1)+"("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+"\n Restart?",
 				func(restart bool) {
-					index, correct = 0, 0
+					index, correct, finishedWords = 0, 0, 0
 					correctCounter.SetText("")
 					finishedCounter.SetText("")
 					inputGrammar.SetText("")
@@ -82,7 +115,7 @@ func setupMainUI() {
 					result.SetText("")
 
 					if restart == true {
-						correct, index = 0, 0
+						correct, index, finishedWords = 0, 0, 0
 						foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
 					} else {
@@ -108,21 +141,32 @@ func setupMainUI() {
 			doneDialog.Show()
 
 		} else {
+			// forward usually
 			if didCheck == false {
 				dialog.ShowError(errors.New("please check your input before you continue"), window)
 				return
 			}
 
-			index++
-			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+			if random {
+				index = rand.Intn(len(vocabularyFile.Vocabulary))
+				foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
 
+			} else {
+				index++
+				foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+			}
+
+			finishedWords++
 			// cleanup
 			inputTranslation.SetText("")
 			inputGrammar.SetText("")
 			result.SetText("")
 		}
-		finishedCounter.SetText("Finished words: " + strconv.Itoa(index) + "/" + strconv.Itoa(len(vocabularyFile.Vocabulary)))
-		correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(index))
+		finishedCounter.SetText("Finished words: " + strconv.Itoa(finishedWords) + "/" + strconv.Itoa(len(vocabularyFile.Vocabulary)))
+		correctCounter.SetText("Correct answers: " + strconv.Itoa(correct) + "/" + strconv.Itoa(finishedWords))
+		if random {
+			finishedCounter.Hide()
+		}
 		didCheck, userHasTry = false, true
 	})
 
@@ -141,19 +185,19 @@ func setupMainUI() {
 			return
 		}
 
-		CheckTranslation := CheckTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
-		CheckGrammar := CheckGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
+		checkTranslation := CheckTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
+		checkGrammar := CheckGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
 
-		if CheckTranslation && CheckGrammar {
+		if checkTranslation && checkGrammar {
 			result.SetText("Correct")
 			correct++
 
-		} else if CheckTranslation {
+		} else if checkTranslation {
 			result.SetText("Partly correct")
 			wrongWordsList = append(wrongWordsList, vocabularyFile.Vocabulary[index])
 			inputGrammar.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][2])
 
-		} else if CheckGrammar {
+		} else if checkGrammar {
 			result.SetText("Partly correct")
 			wrongWordsList = append(wrongWordsList, vocabularyFile.Vocabulary[index])
 			inputTranslation.SetText("Correct answer: " + vocabularyFile.Vocabulary[index][1])
@@ -192,11 +236,13 @@ func setupMainUI() {
 			inputTranslation.SetText("")
 			correctCounter.SetText("")
 			finishedCounter.SetText("")
-			index, correct = 0, 0
+			index, correct, finishedWords = 0, 0, 0
 			openFileToUseProgram = false
 
 			title.SetText(vocabularyFile.Title)
+
 			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+
 		}, window)
 
 		openFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
@@ -221,6 +267,15 @@ func setupMainUI() {
 		SetupUIVocabularyGenerator()
 	})
 
+	randomWordsBtn := widget.NewCheck("Random Words (infinite)", func(checked bool) {
+		if checked == true {
+			random = true
+
+		} else {
+			random = false
+		}
+	})
+
 	window.SetContent(
 		widget.NewVBox(
 			openButton,
@@ -238,40 +293,10 @@ func setupMainUI() {
 			layout.NewSpacer(),
 			widget.NewHBox(
 				settingsButton,
+				randomWordsBtn,
 				layout.NewSpacer(),
 				openGeneratorBtn,
 			),
 		))
 	window.ShowAndRun()
-}
-
-func fileOpened(f fyne.URIReadCloser) error {
-	if f == nil {
-		return errors.New("cancelled")
-	}
-
-	byteData, err := ioutil.ReadAll(f)
-	if err != nil {
-		return err
-	}
-	if byteData == nil {
-		return errors.New("the file does not have any content")
-	}
-
-	json.Unmarshal(byteData, &vocabularyFile)
-
-	if len(vocabularyFile.Vocabulary) == 0 {
-		return errors.New("the file does not contain any vocabulary or is not correctly formatted")
-	}
-
-	for i := 0; i < len(vocabularyFile.Vocabulary); i++ {
-		if len(vocabularyFile.Vocabulary[i]) != 3 {
-			return errors.New("the file contains vocabulary with too many or too less arguments (error in list item " + strconv.Itoa(i+1) + " )")
-		}
-	}
-	return nil
-}
-
-func main() {
-	setupMainUI()
 }
