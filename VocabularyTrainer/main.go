@@ -95,7 +95,7 @@ func main() {
 	inputGrammar := widget.NewEntry()
 	inputGrammar.SetPlaceHolder("Grammar")
 
-	continueButton := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
+	continueBtn := widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), func() {
 		if openFileToUseProgram == true {
 			return
 		}
@@ -171,7 +171,7 @@ func main() {
 		didCheck, userHasTry = false, true
 	})
 
-	checkButton := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
+	checkBtn := widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), func() {
 		if openFileToUseProgram == true {
 			return
 		}
@@ -244,8 +244,8 @@ func main() {
 			}
 
 			// activate inputs + buttons when a file is opened; cleanup
-			checkButton.Enable()
-			continueButton.Enable()
+			checkBtn.Enable()
+			continueBtn.Enable()
 			switchLanguagesBtn.Enable()
 			inputGrammar.Enable()
 			inputTranslation.Enable()
@@ -288,8 +288,8 @@ func main() {
 	})
 
 	// enable all inputs + buttons as long as there is no file opened
-	checkButton.Disable()
-	continueButton.Disable()
+	checkBtn.Disable()
+	continueBtn.Disable()
 	inputGrammar.Disable()
 	inputTranslation.Disable()
 	switchLanguagesBtn.Disable()
@@ -303,8 +303,8 @@ func main() {
 			inputTranslation,
 			inputGrammar,
 			widget.NewHBox(
-				checkButton,
-				continueButton,
+				checkBtn,
+				continueBtn,
 				result,
 				layout.NewSpacer(),
 				switchLanguagesBtn,

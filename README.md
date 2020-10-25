@@ -94,5 +94,5 @@ If you have any problems with the program or the repository you can create an [i
 
 ## ToDo
 
-- keyboard shortcuts 
+- keyboard shortcuts
 - German language support

@@ -18,6 +18,7 @@ func SetupUISettings() {
 	})
 
 	settingsLabel := widget.NewLabel("Settings")
+	infoLabel := widget.NewLabel("v1.2 | License: GPLv3")
 
 	// theme selector
 	themeSelectorLabel := widget.NewLabel("Theme")
@@ -34,7 +35,6 @@ func SetupUISettings() {
 	themeSelector.SetSelected(App.Preferences().StringWithFallback("Theme", "Dark"))
 
 	githubLink := widget.NewHyperlink("More information on Github", parseURL("https://github.com/Palexer/vocabulary-trainer"))
-	license := widget.NewLabel("License: GPLv3")
 
 	windowSettings.SetContent(
 		widget.NewVBox(
@@ -45,9 +45,9 @@ func SetupUISettings() {
 			),
 			layout.NewSpacer(),
 			widget.NewHBox(
-				githubLink,
+				infoLabel,
 				layout.NewSpacer(),
-				license,
+				githubLink,
 			),
 		))
 	windowSettings.Show()
