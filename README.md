@@ -30,7 +30,7 @@ Please note, that the focus is not on mobile, that's why the Android version isn
 - Download the .app.zip file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and unzip it. You can now drag it into your applications folder and execute it. 
 _(Alternatively you can directly execute the file from anywhere)_
 
-## Android
+### Android
 
 - Download the .apk file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and install it on your Android device. 
 
@@ -82,6 +82,8 @@ _Note: You are NOT allowed to have spaces after the commas in the .json-files._
 The last list entry is optional (additional grammar). If you don't use it for a word, 
 you have to put an empty string there (like in the last example above).
 
+To avoid errors, please use the Vocabulary Generator.
+
 ## License
 
 - GPL v3
@@ -93,6 +95,4 @@ If you have any problems with the program or the repository you can create an [i
 ## ToDo
 
 - keyboard shortcuts 
-- switch languages
 - German language support
-- text-to-speech: https://golangr.com/text-to-speech/

@@ -29,6 +29,7 @@ var (
 	index                int
 	finishedWords        int
 	correct              int
+	langIndex            int
 	wrongWordsList       [][]string
 	didCheck             bool
 	openFileToUseProgram bool = true
@@ -105,7 +106,7 @@ func main() {
 			// calculate the percentage of correct answers
 			var percentage float64 = math.Round((float64(correct)/float64(finishedWords+1)*100.0)*100) / 100
 			doneDialog := dialog.NewConfirm(
-				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(finishedWords+1)+"("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+"\n Restart?",
+				"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(correct)+"/"+strconv.Itoa(finishedWords+1)+" ("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+"\n Restart?",
 				func(restart bool) {
 					index, correct, finishedWords = 0, 0, 0
 					correctCounter.SetText("")
@@ -116,7 +117,7 @@ func main() {
 
 					if restart == true {
 						correct, index, finishedWords = 0, 0, 0
-						foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+						foreignWord.SetText(vocabularyFile.Vocabulary[index][langIndex])
 
 					} else {
 						foreignWord.SetText("")
@@ -149,11 +150,11 @@ func main() {
 
 			if random {
 				index = rand.Intn(len(vocabularyFile.Vocabulary))
-				foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+				foreignWord.SetText(vocabularyFile.Vocabulary[index][langIndex])
 
 			} else {
 				index++
-				foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+				foreignWord.SetText(vocabularyFile.Vocabulary[index][langIndex])
 			}
 
 			finishedWords++
@@ -185,7 +186,13 @@ func main() {
 			return
 		}
 
-		checkTranslation := CheckTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
+		var checkTranslation bool
+		if langIndex == 0 {
+			checkTranslation = CheckTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][1])
+		} else {
+			checkTranslation = CheckTranslation(inputTranslation.Text, vocabularyFile.Vocabulary[index][0])
+		}
+
 		checkGrammar := CheckGrammar(inputGrammar.Text, vocabularyFile.Vocabulary[index][2])
 
 		if checkTranslation && checkGrammar {
@@ -211,6 +218,15 @@ func main() {
 		didCheck, userHasTry = true, false
 	})
 
+	switchLanguagesBtn := widget.NewButton("Switch Languages", func() {
+		if langIndex == 0 {
+			langIndex = 1
+		} else {
+			langIndex = 0
+		}
+		foreignWord.SetText(vocabularyFile.Vocabulary[index][langIndex])
+	})
+
 	openButton := widget.NewButtonWithIcon("Open File", theme.FolderOpenIcon(), func() {
 		openFileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
 			if err == nil && reader == nil {
@@ -230,6 +246,7 @@ func main() {
 			// activate inputs + buttons when a file is opened; cleanup
 			checkButton.Enable()
 			continueButton.Enable()
+			switchLanguagesBtn.Enable()
 			inputGrammar.Enable()
 			inputTranslation.Enable()
 			inputGrammar.SetText("")
@@ -241,19 +258,13 @@ func main() {
 
 			title.SetText(vocabularyFile.Title)
 
-			foreignWord.SetText(vocabularyFile.Vocabulary[index][0])
+			foreignWord.SetText(vocabularyFile.Vocabulary[index][langIndex])
 
 		}, window)
 
 		openFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
 		openFileDialog.Show()
 	})
-
-	// enable all inputs + buttons as long as there is no file opened
-	checkButton.Disable()
-	continueButton.Disable()
-	inputGrammar.Disable()
-	inputTranslation.Disable()
 
 	settingsButton := widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
 		SetupUISettings()
@@ -276,6 +287,14 @@ func main() {
 		}
 	})
 
+	// enable all inputs + buttons as long as there is no file opened
+	checkButton.Disable()
+	continueButton.Disable()
+	inputGrammar.Disable()
+	inputTranslation.Disable()
+	switchLanguagesBtn.Disable()
+
+	// put widgets on screen with a VBox layout
 	window.SetContent(
 		widget.NewVBox(
 			openButton,
@@ -287,6 +306,8 @@ func main() {
 				checkButton,
 				continueButton,
 				result,
+				layout.NewSpacer(),
+				switchLanguagesBtn,
 			),
 			correctCounter,
 			finishedCounter,
