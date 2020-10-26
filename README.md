@@ -4,6 +4,8 @@
 
 Vocabulary Trainer is a small application written in Go, that can help you with learning new vocabulary.
 
+![screenshot](/home/paul/Dev/go%20src/github.com/vocabulary-trainer/screenshot.png)
+
 ## Installation
 
 The VocabularyTrainer is currently available for Windows, macOS, Linux and Android. 
@@ -28,7 +30,7 @@ Please note, that the focus is not on mobile, that's why the Android version isn
 ### macOS
 
 - Download the .app.zip file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and unzip it. You can now drag it into your applications folder and execute it. 
-_(Alternatively you can directly execute the file from anywhere)_
+  _(Alternatively you can directly execute the file from anywhere)_
 
 ### Android
 
