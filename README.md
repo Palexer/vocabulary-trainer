@@ -4,7 +4,7 @@
 
 Vocabulary Trainer is a small application written in Go, that can help you with learning new vocabulary.
 
-![screenshot](/home/paul/Dev/go%20src/github.com/vocabulary-trainer/screenshot.png)
+![screenshot](screenshot.png)
 
 ## Installation
 
