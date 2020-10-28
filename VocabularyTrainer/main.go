@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"math"
 	"math/rand"
@@ -56,10 +55,14 @@ type UI struct {
 	switchLanguagesBtn *widget.Button
 
 	// generator UI
+	winGenerator            fyne.Window
 	titleInput              *widget.Entry
 	foreignWordInput        *widget.Entry
 	correctTranslationInput *widget.Entry
 	correctGrammarInput     *widget.Entry
+	saveFileBtn             *widget.Button
+	newJSONFile             jsonFile
+	writeIndex              int
 }
 
 func (u *UI) initVars() {
@@ -128,12 +131,36 @@ func (u *UI) loadMainUI() *widget.Box {
 	})
 
 	// keyboard shortcuts
+	// continue using ctrl+f
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
-		KeyName:  fyne.KeyEnter,
+		KeyName:  fyne.KeyF,
 		Modifier: desktop.ControlModifier,
 	}, func(_ fyne.Shortcut) {
-		fmt.Println("enter")
-		u.checkBtn.OnTapped()
+		u.continueFunc()
+	})
+
+	// check using ctrl+d
+	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
+		KeyName:  fyne.KeyD,
+		Modifier: desktop.ControlModifier,
+	}, func(_ fyne.Shortcut) {
+		u.checkBtnFunc()
+	})
+
+	// open generator using ctrl+g
+	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
+		KeyName:  fyne.KeyG,
+		Modifier: desktop.ControlModifier,
+	}, func(_ fyne.Shortcut) {
+		u.checkBtnFunc()
+	})
+
+	// open file using ctrl+o
+	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
+		KeyName:  fyne.KeyO,
+		Modifier: desktop.ControlModifier,
+	}, func(_ fyne.Shortcut) {
+		u.checkBtnFunc()
 	})
 
 	// enable all inputs + buttons as long as there is no file opened
