@@ -23,9 +23,9 @@ type jsonFile struct {
 var newJSONFile jsonFile
 var writeIndex int
 
-// loadUIVocabularyGenerator builds up the UI for the vocabulary generator
-func (u *UI) loadUIVocabularyGenerator() {
-	winGenerator := App.NewWindow("Vocabulary Generator")
+// loadUIGenerator builds up the UI for the vocabulary generator
+func (u *UI) loadUIGenerator() {
+	winGenerator := u.app.NewWindow("Vocabulary Generator")
 	winGenerator.Resize(fyne.NewSize(600, 440))
 	winGenerator.SetIcon(resourceIconPng)
 

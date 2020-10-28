@@ -11,7 +11,7 @@ import (
 
 // loadUISettings creates the settings dialog for the application
 func (u *UI) loadUISettings() {
-	winSettings := App.NewWindow("Settings")
+	winSettings := u.app.NewWindow("Settings")
 	winSettings.Resize(fyne.NewSize(600, 440))
 
 	settingsLabel := widget.NewLabel("Settings")
@@ -22,14 +22,14 @@ func (u *UI) loadUISettings() {
 	themeSelector := widget.NewSelect([]string{"Light", "Dark"}, func(selectedTheme string) {
 		switch selectedTheme {
 		case "Light":
-			App.Settings().SetTheme(theme.LightTheme())
+			u.app.Settings().SetTheme(theme.LightTheme())
 		case "Dark":
-			App.Settings().SetTheme(theme.DarkTheme())
+			u.app.Settings().SetTheme(theme.DarkTheme())
 		}
 
-		App.Preferences().SetString("Theme", selectedTheme)
+		u.app.Preferences().SetString("Theme", selectedTheme)
 	})
-	themeSelector.SetSelected(App.Preferences().StringWithFallback("Theme", "Dark"))
+	themeSelector.SetSelected(u.app.Preferences().StringWithFallback("Theme", "Dark"))
 
 	githubLink := widget.NewHyperlink("More information on Github", parseURL("https://github.com/Palexer/vocabulary-trainer"))
 
