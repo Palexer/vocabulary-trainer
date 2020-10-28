@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 
+	"fyne.io/fyne/driver/desktop"
+
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
@@ -20,36 +22,15 @@ type jsonFile struct {
 	Vocabulary [][]string
 }
 
-var newJSONFile jsonFile
-var writeIndex int
-
 // loadUIGenerator builds up the UI for the vocabulary generator
 func (u *UI) loadUIGenerator() {
-	winGenerator := u.app.NewWindow("Vocabulary Generator")
-	winGenerator.Resize(fyne.NewSize(600, 440))
-	winGenerator.SetIcon(resourceIconPng)
+	var writeIndex = 0
 
-	saveFileBtn := widget.NewButtonWithIcon("Save File", theme.DocumentSaveIcon(), func() {
-		saveFileDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
-			if err != nil {
-				dialog.ShowError(err, winGenerator)
-				return
-			}
+	u.winGenerator = u.app.NewWindow("Vocabulary Generator")
+	u.winGenerator.Resize(fyne.NewSize(600, 440))
+	u.winGenerator.SetIcon(resourceIconPng)
 
-			if err == nil && writer == nil {
-				return
-			}
-
-			err = writeJSONFile(writer)
-			if err != nil {
-				dialog.ShowError(err, winGenerator)
-			}
-
-		}, winGenerator)
-
-		saveFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
-		saveFileDialog.Show()
-	})
+	u.saveFileBtn = widget.NewButtonWithIcon("Save File", theme.DocumentSaveIcon(), u.saveFile)
 
 	u.titleInput = widget.NewEntry()
 	u.titleInput.SetPlaceHolder("Title")
@@ -66,16 +47,33 @@ func (u *UI) loadUIGenerator() {
 
 	backBtn := widget.NewButtonWithIcon("Remove last entry", theme.NavigateBackIcon(), func() {
 		if writeIndex <= 0 {
-			dialog.ShowError(errors.New("can't remove last word because there are no words yet"), winGenerator)
+			dialog.ShowError(errors.New("can't remove last word because there are no words yet"), u.winGenerator)
 			return
 		}
 		writeIndex--
-		newJSONFile.Vocabulary = newJSONFile.Vocabulary[:writeIndex]
+		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:writeIndex]
 	})
 
-	winGenerator.SetContent(
+	// keyboard shortcuts
+	// save file using ctrl+s
+	u.winGenerator.Canvas().AddShortcut(&desktop.CustomShortcut{
+		KeyName:  fyne.KeyS,
+		Modifier: desktop.ControlModifier,
+	}, func(_ fyne.Shortcut) {
+		u.saveFile()
+	})
+
+	// next word / save word using ctrl+n
+	u.winGenerator.Canvas().AddShortcut(&desktop.CustomShortcut{
+		KeyName:  fyne.KeyN,
+		Modifier: desktop.ControlModifier,
+	}, func(_ fyne.Shortcut) {
+		u.saveWord()
+	})
+
+	u.winGenerator.SetContent(
 		widget.NewVBox(
-			saveFileBtn,
+			u.saveFileBtn,
 			u.titleInput,
 			layout.NewSpacer(),
 			u.foreignWordInput,
@@ -89,12 +87,45 @@ func (u *UI) loadUIGenerator() {
 				saveWordBtn,
 			),
 		))
-	winGenerator.Show()
+	u.winGenerator.Show()
+}
+
+func (u *UI) saveFile() {
+	if len(u.newJSONFile.Vocabulary) == 0 {
+		dialog.ShowError(errors.New("the file doesn't contain any vocabulary"), u.winGenerator)
+		return
+	}
+
+	saveFileDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
+		if err != nil {
+			dialog.ShowError(err, u.winGenerator)
+			return
+		}
+
+		if err == nil && writer == nil {
+			return
+		}
+
+		err = u.writeJSONFile(writer)
+		if err != nil {
+			dialog.ShowError(err, u.winGenerator)
+		}
+
+	}, u.winGenerator)
+
+	saveFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
+	saveFileDialog.Show()
 }
 
 func (u *UI) saveWord() {
-	newJSONFile.Title = u.titleInput.Text
+	if u.foreignWordInput.Text == "" || u.correctTranslationInput.Text == "" {
+		dialog.ShowError(
+			errors.New("please and enter at least a foreign word and the translation of it"),
+			u.winGenerator)
+		return
+	}
 
+	u.newJSONFile.Title = u.titleInput.Text
 	vocabularyInputs := []string{u.foreignWordInput.Text, u.correctTranslationInput.Text, u.correctGrammarInput.Text}
 	vocabularyInputsFinished := []string{}
 
@@ -128,17 +159,17 @@ func (u *UI) saveWord() {
 	}
 
 	// append new vocabulary to struct
-	newJSONFile.Vocabulary = append(
-		newJSONFile.Vocabulary,
+	u.newJSONFile.Vocabulary = append(
+		u.newJSONFile.Vocabulary,
 		vocabularyInputsFinished)
 
-	writeIndex++
+	u.writeIndex++
 	u.foreignWordInput.SetText("")
 	u.correctGrammarInput.SetText("")
 	u.correctTranslationInput.SetText("")
 }
 
-func writeJSONFile(f fyne.URIWriteCloser) error {
+func (u *UI) writeJSONFile(f fyne.URIWriteCloser) error {
 	if f.URI().Extension() != ".json" {
 		return errors.New("the vocabulary files needs the .json file extension")
 	}
@@ -147,7 +178,7 @@ func writeJSONFile(f fyne.URIWriteCloser) error {
 		return errors.New("cancelled")
 	}
 
-	encodedJSONFile, err := json.MarshalIndent(newJSONFile, "", " ")
+	encodedJSONFile, err := json.MarshalIndent(u.newJSONFile, "", " ")
 	if err != nil {
 		return err
 	}

@@ -84,7 +84,19 @@ _Note: You are NOT allowed to have spaces after the commas in the .json-files._
 The last list entry is optional (additional grammar). If you don't use it for a word, 
 you have to put an empty string there (like in the last example above).
 
-To avoid errors, please use the Vocabulary Generator.
+To avoid errors, it is recommended to use the Vocabulary Generator.
+
+### Keyboard Shortcuts
+
+|Keys|Action|
+|---|------|
+|Ctrl+O|open file|
+|Ctrl+G|open Vocabulary Generator|
+|Ctrl+D|check vocabulary|
+|Ctrl+F|move to next word|
+|            |
+|Ctrl+S|save file|
+|Ctrl+N|save word|
 
 ## License
 
@@ -96,5 +108,5 @@ If you have any problems with the program or the repository you can create an [i
 
 ## ToDo
 
-- keyboard shortcuts
+- automatically add .json file extension
 - German language support
