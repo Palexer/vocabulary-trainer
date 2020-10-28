@@ -9,13 +9,10 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-// SetupUISettings creates the settings dialog for the application
-func SetupUISettings() {
-	windowSettings := App.NewWindow("Settings")
-	windowSettings.Resize(fyne.Size{
-		Width:  600,
-		Height: 440,
-	})
+// loadUISettings creates the settings dialog for the application
+func (u *UI) loadUISettings() {
+	winSettings := App.NewWindow("Settings")
+	winSettings.Resize(fyne.NewSize(600, 440))
 
 	settingsLabel := widget.NewLabel("Settings")
 	infoLabel := widget.NewLabel("v1.2 | License: GPLv3")
@@ -36,7 +33,7 @@ func SetupUISettings() {
 
 	githubLink := widget.NewHyperlink("More information on Github", parseURL("https://github.com/Palexer/vocabulary-trainer"))
 
-	windowSettings.SetContent(
+	winSettings.SetContent(
 		widget.NewVBox(
 			settingsLabel,
 			widget.NewHBox(
@@ -50,7 +47,7 @@ func SetupUISettings() {
 				githubLink,
 			),
 		))
-	windowSettings.Show()
+	winSettings.Show()
 }
 
 func parseURL(urlStr string) *url.URL {

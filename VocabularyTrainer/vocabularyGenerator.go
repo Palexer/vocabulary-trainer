@@ -23,19 +23,16 @@ type jsonFile struct {
 var newJSONFile jsonFile
 var writeIndex int
 
-// SetupUIVocabularyGenerator builds up the UI for the vocabulary generator
-func SetupUIVocabularyGenerator() {
-	windowVocGenerator := App.NewWindow("Vocabulary Generator")
-	windowVocGenerator.Resize(fyne.Size{
-		Width:  600,
-		Height: 440,
-	})
-	windowVocGenerator.SetIcon(resourceIconPng)
+// loadUIVocabularyGenerator builds up the UI for the vocabulary generator
+func (u *UI) loadUIVocabularyGenerator() {
+	winGenerator := App.NewWindow("Vocabulary Generator")
+	winGenerator.Resize(fyne.NewSize(600, 440))
+	winGenerator.SetIcon(resourceIconPng)
 
 	saveFileBtn := widget.NewButtonWithIcon("Save File", theme.DocumentSaveIcon(), func() {
 		saveFileDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
 			if err != nil {
-				dialog.ShowError(err, windowVocGenerator)
+				dialog.ShowError(err, winGenerator)
 				return
 			}
 
@@ -45,89 +42,45 @@ func SetupUIVocabularyGenerator() {
 
 			err = writeJSONFile(writer)
 			if err != nil {
-				dialog.ShowError(err, windowVocGenerator)
+				dialog.ShowError(err, winGenerator)
 			}
 
-		}, windowVocGenerator)
+		}, winGenerator)
 
 		saveFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
 		saveFileDialog.Show()
 	})
 
-	titleInput := widget.NewEntry()
-	titleInput.SetPlaceHolder("Title")
+	u.titleInput = widget.NewEntry()
+	u.titleInput.SetPlaceHolder("Title")
 
-	foreignWordInput := widget.NewEntry()
-	correctTranslationInput := widget.NewEntry()
-	correctGrammarInput := widget.NewEntry()
+	u.foreignWordInput = widget.NewEntry()
+	u.correctTranslationInput = widget.NewEntry()
+	u.correctGrammarInput = widget.NewEntry()
 
-	foreignWordInput.SetPlaceHolder("Foreign Word")
-	correctTranslationInput.SetPlaceHolder("Translation")
-	correctGrammarInput.SetPlaceHolder("Grammar")
+	u.foreignWordInput.SetPlaceHolder("Foreign Word")
+	u.correctTranslationInput.SetPlaceHolder("Translation")
+	u.correctGrammarInput.SetPlaceHolder("Grammar")
 
-	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), func() {
-		newJSONFile.Title = titleInput.Text
-
-		vocabularyInputs := []string{foreignWordInput.Text, correctTranslationInput.Text, correctGrammarInput.Text}
-		vocabularyInputsFinished := []string{}
-
-		// remove spaces if necessary
-		for i, input := range vocabularyInputs {
-			editedText := []string{}
-
-			if i > 0 {
-				for _, word := range strings.Split(input, ",") {
-					if strings.HasPrefix(word, " ") {
-						word = strings.TrimPrefix(word, " ")
-					}
-
-					if strings.HasSuffix(word, " ") {
-						word = strings.TrimSuffix(word, " ")
-					}
-
-					editedText = append(editedText, word)
-				}
-
-			} else {
-				if strings.HasPrefix(input, " ") {
-					input = strings.TrimPrefix(input, " ")
-				}
-				if strings.HasSuffix(input, " ") {
-					input = strings.TrimSuffix(input, " ")
-				}
-				editedText = []string{input}
-			}
-			vocabularyInputsFinished = append(vocabularyInputsFinished, strings.Join(editedText, ","))
-		}
-
-		// append new vocabulary to struct
-		newJSONFile.Vocabulary = append(
-			newJSONFile.Vocabulary,
-			vocabularyInputsFinished)
-
-		writeIndex++
-		foreignWordInput.SetText("")
-		correctGrammarInput.SetText("")
-		correctTranslationInput.SetText("")
-	})
+	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), u.saveWord)
 
 	backBtn := widget.NewButtonWithIcon("Remove last entry", theme.NavigateBackIcon(), func() {
 		if writeIndex <= 0 {
-			dialog.ShowError(errors.New("can't remove last word because there are no words yet"), windowVocGenerator)
+			dialog.ShowError(errors.New("can't remove last word because there are no words yet"), winGenerator)
 			return
 		}
 		writeIndex--
 		newJSONFile.Vocabulary = newJSONFile.Vocabulary[:writeIndex]
 	})
 
-	windowVocGenerator.SetContent(
+	winGenerator.SetContent(
 		widget.NewVBox(
 			saveFileBtn,
-			titleInput,
+			u.titleInput,
 			layout.NewSpacer(),
-			foreignWordInput,
-			correctTranslationInput,
-			correctGrammarInput,
+			u.foreignWordInput,
+			u.correctTranslationInput,
+			u.correctGrammarInput,
 			layout.NewSpacer(),
 			layout.NewSpacer(),
 			widget.NewHBox(
@@ -136,7 +89,53 @@ func SetupUIVocabularyGenerator() {
 				saveWordBtn,
 			),
 		))
-	windowVocGenerator.Show()
+	winGenerator.Show()
+}
+
+func (u *UI) saveWord() {
+	newJSONFile.Title = u.titleInput.Text
+
+	vocabularyInputs := []string{u.foreignWordInput.Text, u.correctTranslationInput.Text, u.correctGrammarInput.Text}
+	vocabularyInputsFinished := []string{}
+
+	// remove spaces if necessary
+	for i, input := range vocabularyInputs {
+		editedText := []string{}
+
+		if i > 0 {
+			for _, word := range strings.Split(input, ",") {
+				if strings.HasPrefix(word, " ") {
+					word = strings.TrimPrefix(word, " ")
+				}
+
+				if strings.HasSuffix(word, " ") {
+					word = strings.TrimSuffix(word, " ")
+				}
+
+				editedText = append(editedText, word)
+			}
+
+		} else {
+			if strings.HasPrefix(input, " ") {
+				input = strings.TrimPrefix(input, " ")
+			}
+			if strings.HasSuffix(input, " ") {
+				input = strings.TrimSuffix(input, " ")
+			}
+			editedText = []string{input}
+		}
+		vocabularyInputsFinished = append(vocabularyInputsFinished, strings.Join(editedText, ","))
+	}
+
+	// append new vocabulary to struct
+	newJSONFile.Vocabulary = append(
+		newJSONFile.Vocabulary,
+		vocabularyInputsFinished)
+
+	writeIndex++
+	u.foreignWordInput.SetText("")
+	u.correctGrammarInput.SetText("")
+	u.correctTranslationInput.SetText("")
 }
 
 func writeJSONFile(f fyne.URIWriteCloser) error {
