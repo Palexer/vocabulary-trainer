@@ -152,7 +152,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		KeyName:  fyne.KeyG,
 		Modifier: desktop.ControlModifier,
 	}, func(_ fyne.Shortcut) {
-		u.checkBtnFunc()
+		u.loadUIGenerator()
 	})
 
 	// open file using ctrl+o
@@ -160,7 +160,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		KeyName:  fyne.KeyO,
 		Modifier: desktop.ControlModifier,
 	}, func(_ fyne.Shortcut) {
-		u.checkBtnFunc()
+		u.openFileFunc()
 	})
 
 	// enable all inputs + buttons as long as there is no file opened
