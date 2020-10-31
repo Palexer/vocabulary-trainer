@@ -399,7 +399,7 @@ func main() {
 	app := app.NewWithID("com.palexer.vocabularytrainer")
 	win := app.NewWindow("Vocabulary Trainer")
 	win.SetIcon(resourceIconPng)
-	win.Resize(fyne.NewSize(800, 600))
+	win.Resize(fyne.NewSize(560, 450))
 	trainerUI := &UI{mainWin: win, app: app}
 	trainerUI.initVars()
 	win.SetContent(trainerUI.loadMainUI())

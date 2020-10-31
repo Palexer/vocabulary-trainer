@@ -24,10 +24,10 @@ type jsonFile struct {
 
 // loadUIGenerator builds up the UI for the vocabulary generator
 func (u *UI) loadUIGenerator() {
-	var writeIndex = 0
+	u.writeIndex = 0
 
 	u.winGenerator = u.app.NewWindow("Vocabulary Generator")
-	u.winGenerator.Resize(fyne.NewSize(600, 440))
+	u.winGenerator.Resize(fyne.NewSize(460, 350))
 	u.winGenerator.SetIcon(resourceIconPng)
 
 	u.saveFileBtn = widget.NewButtonWithIcon("Save File", theme.DocumentSaveIcon(), u.saveFile)
@@ -45,13 +45,19 @@ func (u *UI) loadUIGenerator() {
 
 	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), u.saveWord)
 
+	clearBtn := widget.NewButtonWithIcon("Clear", theme.ContentClearIcon(), func() {
+		u.writeIndex = 0
+		u.newJSONFile.Title = ""
+		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:0]
+	})
+
 	backBtn := widget.NewButtonWithIcon("Remove last entry", theme.NavigateBackIcon(), func() {
-		if writeIndex <= 0 {
-			dialog.ShowError(errors.New("can't remove last word because there are no words yet"), u.winGenerator)
+		if len(u.newJSONFile.Vocabulary) == 0 {
+			dialog.ShowError(errors.New("the file doesn't contain any vocabulary"), u.winGenerator)
 			return
 		}
-		writeIndex--
-		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:writeIndex]
+		u.writeIndex--
+		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:u.writeIndex]
 	})
 
 	// keyboard shortcuts
@@ -83,6 +89,7 @@ func (u *UI) loadUIGenerator() {
 			layout.NewSpacer(),
 			widget.NewHBox(
 				backBtn,
+				clearBtn,
 				layout.NewSpacer(),
 				saveWordBtn,
 			),

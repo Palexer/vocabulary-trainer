@@ -12,7 +12,7 @@ import (
 // loadUISettings creates the settings dialog for the application
 func (u *UI) loadUISettings() {
 	winSettings := u.app.NewWindow("Settings")
-	winSettings.Resize(fyne.NewSize(600, 440))
+	winSettings.Resize(fyne.NewSize(360, 250))
 
 	settingsLabel := widget.NewLabel("Settings")
 	infoLabel := widget.NewLabel("v1.2 | License: GPLv3")
