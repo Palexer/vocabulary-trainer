@@ -40,6 +40,8 @@ type UI struct {
 	userHasTry           bool
 	random               bool
 
+	writeIndex int
+
 	// main UI
 	app                fyne.App
 	mainWin            fyne.Window
@@ -62,16 +64,13 @@ type UI struct {
 	correctGrammarInput     *widget.Entry
 	saveFileBtn             *widget.Button
 	newJSONFile             jsonFile
-	writeIndex              int
 }
 
 func (u *UI) initVars() {
-	// u.vocabularyFile
 	u.index = 0
 	u.finishedWords = 0
 	u.correct = 0
 	u.langIndex = 0
-	// u.wrongWordsList
 	u.didCheck = false
 	u.openFileToUseProgram = false
 	u.userHasTry = false
@@ -163,7 +162,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		u.openFileFunc()
 	})
 
-	// enable all inputs + buttons as long as there is no file opened
+	// disable all inputs + buttons as long as there is no file opened
 	u.checkBtn.Disable()
 	u.continueBtn.Disable()
 	u.inputGrammar.Disable()
@@ -396,11 +395,11 @@ func (u *UI) fileOpened(f fyne.URIReadCloser) error {
 }
 
 func main() {
-	app := app.NewWithID("com.palexer.vocabularytrainer")
-	win := app.NewWindow("Vocabulary Trainer")
+	a := app.NewWithID("com.palexer.vocabularytrainer")
+	win := a.NewWindow("Vocabulary Trainer")
 	win.SetIcon(resourceIconPng)
 	win.Resize(fyne.NewSize(560, 450))
-	trainerUI := &UI{mainWin: win, app: app}
+	trainerUI := &UI{mainWin: win, app: a}
 	trainerUI.initVars()
 	win.SetContent(trainerUI.loadMainUI())
 	win.ShowAndRun()

@@ -45,12 +45,14 @@ func (u *UI) loadUIGenerator() {
 
 	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), u.saveWord)
 
+	// clears all the previously entered vocabulary
 	clearBtn := widget.NewButtonWithIcon("Clear", theme.ContentClearIcon(), func() {
 		u.writeIndex = 0
 		u.newJSONFile.Title = ""
 		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:0]
 	})
 
+	// removes the last entered word
 	backBtn := widget.NewButtonWithIcon("Remove last entry", theme.NavigateBackIcon(), func() {
 		if len(u.newJSONFile.Vocabulary) == 0 {
 			dialog.ShowError(errors.New("the file doesn't contain any vocabulary"), u.winGenerator)
@@ -77,6 +79,7 @@ func (u *UI) loadUIGenerator() {
 		u.saveWord()
 	})
 
+	// add the widgets to a VBox layout and set it as the content of the window
 	u.winGenerator.SetContent(
 		widget.NewVBox(
 			u.saveFileBtn,
@@ -132,12 +135,11 @@ func (u *UI) saveWord() {
 		return
 	}
 
-	u.newJSONFile.Title = u.titleInput.Text
-	vocabularyInputs := []string{u.foreignWordInput.Text, u.correctTranslationInput.Text, u.correctGrammarInput.Text}
+	u.newJSONFile.Title = u.titleInput.Text // save the title
 	vocabularyInputsFinished := []string{}
 
 	// remove spaces if necessary
-	for i, input := range vocabularyInputs {
+	for i, input := range []string{u.foreignWordInput.Text, u.correctTranslationInput.Text, u.correctGrammarInput.Text} {
 		editedText := []string{}
 
 		if i > 0 {
