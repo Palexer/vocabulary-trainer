@@ -11,13 +11,8 @@ func CheckTranslation(input, correctAnswer string) bool {
 	editedInput := []string{}
 
 	for _, word := range strings.Split(input, ",") {
-		if strings.HasSuffix(word, " ") {
-			word = strings.TrimSuffix(word, " ")
-		}
-
-		if strings.HasPrefix(word, " ") {
-			word = strings.TrimPrefix(word, " ")
-		}
+		word = strings.TrimSuffix(word, " ")
+		word = strings.TrimPrefix(word, " ")
 		editedInput = append(editedInput, word)
 	}
 
@@ -45,13 +40,8 @@ func CheckGrammar(input, correctAnswer string) bool {
 		editedInput := []string{}
 
 		for _, word := range strings.Split(input, ",") {
-			if strings.HasSuffix(word, " ") {
-				word = strings.TrimSuffix(word, " ")
-			}
-
-			if strings.HasPrefix(word, " ") {
-				word = strings.TrimPrefix(word, " ")
-			}
+			word = strings.TrimSuffix(word, " ")
+			word = strings.TrimPrefix(word, " ")
 			editedInput = append(editedInput, word)
 		}
 
