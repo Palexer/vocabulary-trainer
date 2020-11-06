@@ -156,8 +156,8 @@ func (u *UI) saveWord() {
 	// cut out the suffix of the languages if it exists
 	u.langOneInput.Text = strings.TrimSuffix(u.langOneInput.Text, " ")
 	u.langOneInput.Text = strings.TrimPrefix(u.langOneInput.Text, " ")
-	u.langTwoInput.Text = strings.TrimSuffix(u.langOneInput.Text, " ")
-	u.langTwoInput.Text = strings.TrimPrefix(u.langOneInput.Text, " ")
+	u.langTwoInput.Text = strings.TrimSuffix(u.langTwoInput.Text, " ")
+	u.langTwoInput.Text = strings.TrimPrefix(u.langTwoInput.Text, " ")
 
 	vocabularyInputsFinished := []string{}
 
