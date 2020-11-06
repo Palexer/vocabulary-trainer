@@ -109,6 +109,13 @@ func (u *UI) loadUIGenerator() {
 			),
 		))
 	u.winGenerator.Show()
+
+	// clear the vocabulary when the window gets closed
+	u.winGenerator.SetOnClosed(func() {
+		u.writeIndex = 0
+		u.newJSONFile.Title = ""
+		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:0]
+	})
 }
 
 func (u *UI) saveFile() {
