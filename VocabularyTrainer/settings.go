@@ -31,7 +31,7 @@ func (u *UI) loadUISettings() {
 	})
 	themeSelector.SetSelected(u.app.Preferences().StringWithFallback("Theme", "Dark"))
 
-	githubLink := widget.NewHyperlink("More information on Github", parseURL("https://github.com/Palexer/vocabulary-trainer"))
+	githubLink := widget.NewHyperlink("More information on Github", u.parseURL("https://github.com/Palexer/vocabulary-trainer"))
 
 	winSettings.SetContent(
 		widget.NewVBox(
@@ -50,7 +50,7 @@ func (u *UI) loadUISettings() {
 	winSettings.Show()
 }
 
-func parseURL(urlStr string) *url.URL {
+func (u *UI) parseURL(urlStr string) *url.URL {
 	link, err := url.Parse(urlStr)
 	if err != nil {
 		fyne.LogError("Could not parse URL", err)

@@ -69,11 +69,13 @@ func (u *UI) loadUIGenerator() {
 		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:u.writeIndex]
 	})
 
+	availableLangLink := widget.NewHyperlink("available languages", u.parseURL("https://github.com/Palexer/vocabulary-trainer#available-languages-for-tts"))
+
 	// keyboard shortcuts
 	// save file using ctrl+s
 	u.winGenerator.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyS,
-		Modifier: desktop.ControlModifier,
+		Modifier: u.modkey,
 	}, func(_ fyne.Shortcut) {
 		u.saveFile()
 	})
@@ -81,7 +83,7 @@ func (u *UI) loadUIGenerator() {
 	// next word / save word using ctrl+n
 	u.winGenerator.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyN,
-		Modifier: desktop.ControlModifier,
+		Modifier: u.modkey,
 	}, func(_ fyne.Shortcut) {
 		u.saveWord()
 	})
@@ -99,6 +101,7 @@ func (u *UI) loadUIGenerator() {
 			u.foreignWordInput,
 			u.correctTranslationInput,
 			u.correctGrammarInput,
+			availableLangLink,
 			layout.NewSpacer(),
 			layout.NewSpacer(),
 			widget.NewHBox(

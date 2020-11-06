@@ -50,6 +50,7 @@ type UI struct {
 	random               bool
 	didSpeakerInit       bool
 	audioBusy            bool
+	modkey               desktop.Modifier
 
 	writeIndex int
 
@@ -92,6 +93,13 @@ func (u *UI) initVars() {
 
 	u.openFileToUseProgram = true
 	u.userHasTry = true
+
+	// set ctrl to super modifier on darwin hosts
+	if runtime.GOOS == "darwin" {
+		u.modkey = desktop.SuperModifier
+	} else {
+		u.modkey = desktop.ControlModifier
+	}
 }
 
 func (u *UI) loadMainUI() *widget.Box {
@@ -156,7 +164,7 @@ func (u *UI) loadMainUI() *widget.Box {
 	// continue using ctrl+f
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyF,
-		Modifier: desktop.ControlModifier,
+		Modifier: u.modkey,
 	}, func(_ fyne.Shortcut) {
 		u.continueFunc()
 	})
@@ -164,7 +172,7 @@ func (u *UI) loadMainUI() *widget.Box {
 	// check using ctrl+d
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyD,
-		Modifier: desktop.ControlModifier,
+		Modifier: u.modkey,
 	}, func(_ fyne.Shortcut) {
 		u.checkBtnFunc()
 	})
@@ -172,7 +180,7 @@ func (u *UI) loadMainUI() *widget.Box {
 	// open generator using ctrl+g
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyG,
-		Modifier: desktop.ControlModifier,
+		Modifier: u.modkey,
 	}, func(_ fyne.Shortcut) {
 		u.loadUIGenerator()
 	})
@@ -180,9 +188,17 @@ func (u *UI) loadMainUI() *widget.Box {
 	// open file using ctrl+o
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyO,
-		Modifier: desktop.ControlModifier,
+		Modifier: u.modkey,
 	}, func(_ fyne.Shortcut) {
 		u.openFileFunc()
+	})
+
+	// close application using ctrl+q
+	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
+		KeyName:  fyne.KeyQ,
+		Modifier: u.modkey,
+	}, func(_ fyne.Shortcut) {
+		u.mainWin.Close()
 	})
 
 	// disable all inputs + buttons as long as there is no file opened
