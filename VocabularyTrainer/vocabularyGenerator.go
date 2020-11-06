@@ -18,8 +18,10 @@ import (
 )
 
 type jsonFile struct {
-	Title      string
-	Vocabulary [][]string
+	Title          string
+	FirstLanguage  string
+	SecondLanguage string
+	Vocabulary     [][]string
 }
 
 // loadUIGenerator builds up the UI for the vocabulary generator
@@ -42,6 +44,11 @@ func (u *UI) loadUIGenerator() {
 	u.foreignWordInput.SetPlaceHolder("Foreign Word")
 	u.correctTranslationInput.SetPlaceHolder("Translation")
 	u.correctGrammarInput.SetPlaceHolder("Grammar")
+
+	u.langOneInput = widget.NewEntry()
+	u.langTwoInput = widget.NewEntry()
+	u.langOneInput.SetPlaceHolder("First Language (foreign word)")
+	u.langTwoInput.SetPlaceHolder("Second language (translation)")
 
 	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), u.saveWord)
 
@@ -84,6 +91,10 @@ func (u *UI) loadUIGenerator() {
 		widget.NewVBox(
 			u.saveFileBtn,
 			u.titleInput,
+			widget.NewHBox(
+				u.langOneInput,
+				u.langTwoInput,
+			),
 			layout.NewSpacer(),
 			u.foreignWordInput,
 			u.correctTranslationInput,
@@ -103,6 +114,13 @@ func (u *UI) loadUIGenerator() {
 func (u *UI) saveFile() {
 	if len(u.newJSONFile.Vocabulary) == 0 {
 		dialog.ShowError(errors.New("the file doesn't contain any vocabulary"), u.winGenerator)
+		return
+	}
+
+	if u.langOneInput.Text == "" || u.langTwoInput.Text == "" {
+		dialog.ShowError(
+			errors.New("please enter the languages of the foreign words/translations \n available languages at"),
+			u.winGenerator)
 		return
 	}
 
@@ -135,7 +153,12 @@ func (u *UI) saveWord() {
 		return
 	}
 
-	u.newJSONFile.Title = u.titleInput.Text // save the title
+	// cut out the suffix of the languages if it exists
+	u.langOneInput.Text = strings.TrimSuffix(u.langOneInput.Text, " ")
+	u.langOneInput.Text = strings.TrimPrefix(u.langOneInput.Text, " ")
+	u.langTwoInput.Text = strings.TrimSuffix(u.langOneInput.Text, " ")
+	u.langTwoInput.Text = strings.TrimPrefix(u.langOneInput.Text, " ")
+
 	vocabularyInputsFinished := []string{}
 
 	// remove spaces if necessary
@@ -144,30 +167,25 @@ func (u *UI) saveWord() {
 
 		if i > 0 {
 			for _, word := range strings.Split(input, ",") {
-				if strings.HasPrefix(word, " ") {
-					word = strings.TrimPrefix(word, " ")
-				}
-
-				if strings.HasSuffix(word, " ") {
-					word = strings.TrimSuffix(word, " ")
-				}
-
+				word = strings.TrimPrefix(word, " ")
+				word = strings.TrimSuffix(word, " ")
 				editedText = append(editedText, word)
 			}
 
 		} else {
-			if strings.HasPrefix(input, " ") {
-				input = strings.TrimPrefix(input, " ")
-			}
-			if strings.HasSuffix(input, " ") {
-				input = strings.TrimSuffix(input, " ")
-			}
+			input = strings.TrimPrefix(input, " ")
+			input = strings.TrimSuffix(input, " ")
 			editedText = []string{input}
 		}
 		vocabularyInputsFinished = append(vocabularyInputsFinished, strings.Join(editedText, ","))
 	}
 
-	// append new vocabulary to struct
+	// save languages + title in the type
+	u.newJSONFile.FirstLanguage = u.langOneInput.Text
+	u.newJSONFile.SecondLanguage = u.langTwoInput.Text
+	u.newJSONFile.Title = u.titleInput.Text
+
+	// append new vocabulary to the list in the type
 	u.newJSONFile.Vocabulary = append(
 		u.newJSONFile.Vocabulary,
 		vocabularyInputsFinished)
