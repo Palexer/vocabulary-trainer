@@ -428,6 +428,7 @@ func (u *UI) speak() {
 	if err != nil {
 		dialog.ShowError(err, u.mainWin)
 	}
+	os.Remove(os.TempDir() + "/" + u.foreignWord.Text + ".mp3")
 	u.audioBusy = false
 }
 
