@@ -108,6 +108,19 @@ To avoid errors, it is recommended to use the Vocabulary Generator.
 
 If you have any problems with the program or the repository you can create an [issue](https://github.com/Palexer/vocabulary-trainer/issues) on the Github page.
 
+### Available languages for TTS
+
+Your usual abbreviations for the languages should mostly word. Here are some tested ones:
+
+|Language|Abbreviations|
+|--------|-------------|
+|English|en|
+|German|de|
+|Latin|la|
+|French|fr|
+|Spanish|sp|
+
+
 ## ToDo
 
 - automatically add .json file extension
