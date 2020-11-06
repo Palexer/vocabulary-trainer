@@ -6,9 +6,11 @@ import (
 	"io/ioutil"
 	"math"
 	"math/rand"
+	"os"
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/driver/desktop"
@@ -19,11 +21,18 @@ import (
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/mp3"
+	"github.com/faiface/beep/speaker"
+	htgotts "github.com/hegedustibor/htgo-tts"
 )
 
 type vocabulary struct {
-	Title      string     `json:"Title"`
-	Vocabulary [][]string `json:"Vocabulary"`
+	Title           string     `json:"Title"`
+	Vocabulary      [][]string `json:"Vocabulary"`
+	FirstLanguage   string
+	SecondLanguage  string
+	CurrentLanguage string
 }
 
 // UI represents the main whole GUI
@@ -39,6 +48,8 @@ type UI struct {
 	openFileToUseProgram bool
 	userHasTry           bool
 	random               bool
+	didSpeakerInit       bool
+	audioBusy            bool
 
 	writeIndex int
 
@@ -55,6 +66,7 @@ type UI struct {
 	continueBtn        *widget.Button
 	checkBtn           *widget.Button
 	switchLanguagesBtn *widget.Button
+	speakBtn           *widget.Button
 
 	// generator UI
 	winGenerator            fyne.Window
@@ -64,6 +76,8 @@ type UI struct {
 	correctGrammarInput     *widget.Entry
 	saveFileBtn             *widget.Button
 	newJSONFile             jsonFile
+	langOneInput            *widget.Entry
+	langTwoInput            *widget.Entry
 }
 
 func (u *UI) initVars() {
@@ -98,6 +112,11 @@ func (u *UI) loadMainUI() *widget.Box {
 	u.checkBtn = widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), u.checkBtnFunc)
 
 	u.switchLanguagesBtn = widget.NewButton("Switch Languages", func() {
+		if u.vocabularyFile.CurrentLanguage == u.vocabularyFile.FirstLanguage {
+			u.vocabularyFile.CurrentLanguage = u.vocabularyFile.SecondLanguage
+		} else {
+			u.vocabularyFile.CurrentLanguage = u.vocabularyFile.FirstLanguage
+		}
 		if u.langIndex == 0 {
 			u.langIndex = 1
 		} else {
@@ -127,6 +146,10 @@ func (u *UI) loadMainUI() *widget.Box {
 		} else {
 			u.random = false
 		}
+	})
+
+	u.speakBtn = widget.NewButtonWithIcon("", theme.MediaPlayIcon(), func() {
+		go u.speak()
 	})
 
 	// keyboard shortcuts
@@ -168,6 +191,7 @@ func (u *UI) loadMainUI() *widget.Box {
 	u.inputGrammar.Disable()
 	u.inputTranslation.Disable()
 	u.switchLanguagesBtn.Disable()
+	u.speakBtn.Disable()
 
 	// return the widgets in a VBox layout
 	return widget.NewVBox(
@@ -179,6 +203,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		widget.NewHBox(
 			u.checkBtn,
 			u.continueBtn,
+			u.speakBtn,
 			u.result,
 			layout.NewSpacer(),
 			u.switchLanguagesBtn,
@@ -348,6 +373,7 @@ func (u *UI) openFileFunc() {
 		u.checkBtn.Enable()
 		u.continueBtn.Enable()
 		u.switchLanguagesBtn.Enable()
+		u.speakBtn.Enable()
 		u.inputGrammar.Enable()
 		u.inputTranslation.Enable()
 		u.inputGrammar.SetText("")
@@ -381,6 +407,7 @@ func (u *UI) fileOpened(f fyne.URIReadCloser) error {
 	}
 
 	json.Unmarshal(byteData, &u.vocabularyFile)
+	u.vocabularyFile.CurrentLanguage = u.vocabularyFile.FirstLanguage
 
 	if len(u.vocabularyFile.Vocabulary) == 0 {
 		return errors.New("the file does not contain any vocabulary or is not correctly formatted")
@@ -391,6 +418,50 @@ func (u *UI) fileOpened(f fyne.URIReadCloser) error {
 			return errors.New("the file contains vocabulary with too many or too less arguments (error in list item " + strconv.Itoa(i+1) + " )")
 		}
 	}
+	return nil
+}
+
+func (u *UI) speak() {
+	s := htgotts.Speech{Folder: os.TempDir(), Language: u.vocabularyFile.CurrentLanguage}
+	s.Speak(u.foreignWord.Text)
+	err := u.playAudio(os.TempDir() + "/" + u.foreignWord.Text + ".mp3")
+	if err != nil {
+		dialog.ShowError(err, u.mainWin)
+	}
+	u.audioBusy = false
+}
+
+func (u *UI) playAudio(file string) error {
+	if u.audioBusy {
+		return errors.New("can't play two audio files simultaneously")
+	}
+
+	u.audioBusy = true
+	f, err := os.Open(file)
+	if err != nil {
+		return err
+	}
+
+	streamer, format, err := mp3.Decode(f)
+	if err != nil {
+		return err
+	}
+	defer streamer.Close()
+
+	if u.didSpeakerInit == false {
+		speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+		u.didSpeakerInit = true
+	} else {
+		speaker.Unlock()
+	}
+
+	done := make(chan bool)
+	speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+		done <- true
+	})))
+
+	<-done
+	defer speaker.Lock()
 	return nil
 }
 
