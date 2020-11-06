@@ -380,11 +380,10 @@ func (u *UI) openFileFunc() {
 		u.inputTranslation.SetText("")
 		u.correctCounter.SetText("")
 		u.finishedCounter.SetText("")
-		u.index, u.correct, u.finishedWords = 0, 0, 0
+		u.index, u.correct, u.finishedWords, u.langIndex = 0, 0, 0, 0
 		u.openFileToUseProgram = false
 
 		u.title.SetText(u.vocabularyFile.Title)
-
 		u.foreignWord.SetText(u.vocabularyFile.Vocabulary[u.index][u.langIndex])
 
 	}, u.mainWin)
