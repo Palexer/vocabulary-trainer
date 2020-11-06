@@ -48,8 +48,10 @@ Please note, that the focus is not on mobile, that's why the Android version isn
 ## Usage
 
 In order to use the Vocabulary Trainer you need a correctly formatted .json-file. You can see how to create one down below.
-You then need to open the file with the Vocabulary Trainer and the program will show you the first foreign word. Enter a translation and, if you need to, also additional grammar. You can also enter multiple translations by separating them with a comma.
-The grammar has to be entered completely. If you entered your translation and grammar, click on the check button to see if you're input was correct. If this is not the case, you will now see the correct answer.  Click on "Continue" to go to the next word. The Vocabulary Trainer will count your correct answers as well as your already finished words while you are practicing.
+You then need to open the file with the Vocabulary Trainer and the program will show you the first foreign word.
+Enter a translation and, if you need to, also additional grammar. You can also enter multiple translations by separating them with a comma.
+The grammar has to be entered completely. If you entered your translation and grammar, click on the check button to see if you're input was correct. If this is not the case, you will now see the correct answer. 
+Click on "Continue" to go to the next word. The Vocabulary Trainer will count your correct answers as well as your already finished words while you are practicing.
 
 ### Creating JSON files
 
@@ -100,7 +102,7 @@ To avoid errors, it is recommended to use the Vocabulary Generator.
 
 ## License
 
-- GPL v3
+- [GPL v3](LICENSE)
 
 ## Help
 
