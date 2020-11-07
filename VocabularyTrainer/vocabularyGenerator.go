@@ -200,6 +200,7 @@ func (u *UI) saveWord() {
 
 func (u *UI) writeJSONFile(f fyne.URIWriteCloser) error {
 	if f.URI().Extension() != ".json" {
+		os.Remove(f.URI().String()[7:])
 		return errors.New("the vocabulary files needs the .json file extension")
 	}
 
