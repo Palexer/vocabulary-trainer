@@ -53,11 +53,7 @@ func (u *UI) loadUIGenerator() {
 	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), u.saveWord)
 
 	// clears all the previously entered vocabulary
-	clearBtn := widget.NewButtonWithIcon("Clear", theme.ContentClearIcon(), func() {
-		u.writeIndex = 0
-		u.newJSONFile.Title = ""
-		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:0]
-	})
+	clearBtn := widget.NewButtonWithIcon("Clear", theme.ContentClearIcon(), u.clear)
 
 	// removes the last entered word
 	backBtn := widget.NewButtonWithIcon("Remove last entry", theme.NavigateBackIcon(), func() {
@@ -114,11 +110,7 @@ func (u *UI) loadUIGenerator() {
 	u.winGenerator.Show()
 
 	// clear the vocabulary when the window gets closed
-	u.winGenerator.SetOnClosed(func() {
-		u.writeIndex = 0
-		u.newJSONFile.Title = ""
-		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:0]
-	})
+	u.winGenerator.SetOnClosed(u.clear)
 }
 
 func (u *UI) saveFile() {
@@ -225,4 +217,10 @@ func (u *UI) writeJSONFile(f fyne.URIWriteCloser) error {
 		return err
 	}
 	return nil
+}
+
+func (u *UI) clear() {
+	u.writeIndex = 0
+	u.newJSONFile.Title = ""
+	u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:0]
 }
