@@ -29,7 +29,7 @@ func (u *UI) loadUIGenerator() {
 	u.writeIndex = 0
 
 	u.winGenerator = u.app.NewWindow("Vocabulary Generator")
-	u.winGenerator.Resize(fyne.NewSize(460, 350))
+	u.winGenerator.Resize(fyne.NewSize(510, 410))
 	u.winGenerator.SetIcon(resourceIconPng)
 
 	u.saveFileBtn = widget.NewButtonWithIcon("Save File", theme.DocumentSaveIcon(), u.saveFile)
@@ -67,6 +67,18 @@ func (u *UI) loadUIGenerator() {
 
 	availableLangLink := widget.NewHyperlink("available languages", u.parseURL("https://github.com/Palexer/vocabulary-trainer#available-languages-for-tts"))
 
+	showWordsBtn := widget.NewButton("Show Words", func() {
+		var enteredWords string
+		for i := range u.newJSONFile.Vocabulary {
+			if i > 10 {
+				continue
+			}
+			enteredWords = enteredWords + "\n" + strings.Join(u.newJSONFile.Vocabulary[i], " - ")
+		}
+
+		dialog.ShowInformation("Last entered Words", enteredWords, u.winGenerator)
+	})
+
 	// keyboard shortcuts
 	// save file using ctrl+s
 	u.winGenerator.Canvas().AddShortcut(&desktop.CustomShortcut{
@@ -89,20 +101,19 @@ func (u *UI) loadUIGenerator() {
 		widget.NewVBox(
 			u.saveFileBtn,
 			u.titleInput,
-			widget.NewHBox(
-				u.langOneInput,
-				u.langTwoInput,
-			),
+			u.langOneInput,
+			u.langTwoInput,
+			availableLangLink,
 			layout.NewSpacer(),
 			u.foreignWordInput,
 			u.correctTranslationInput,
 			u.correctGrammarInput,
-			availableLangLink,
 			layout.NewSpacer(),
 			layout.NewSpacer(),
 			widget.NewHBox(
 				backBtn,
 				clearBtn,
+				showWordsBtn,
 				layout.NewSpacer(),
 				saveWordBtn,
 			),
@@ -121,7 +132,7 @@ func (u *UI) saveFile() {
 
 	if u.langOneInput.Text == "" || u.langTwoInput.Text == "" {
 		dialog.ShowError(
-			errors.New("please enter the languages of the foreign words/translations \n available languages at"),
+			errors.New("please enter the languages of the foreign words/translations"),
 			u.winGenerator)
 		return
 	}

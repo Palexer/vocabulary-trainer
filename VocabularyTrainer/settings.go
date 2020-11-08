@@ -11,8 +11,8 @@ import (
 
 // loadUISettings creates the settings dialog for the application
 func (u *UI) loadUISettings() {
-	winSettings := u.app.NewWindow("Settings")
-	winSettings.Resize(fyne.NewSize(360, 250))
+	u.winSettings = u.app.NewWindow("Settings")
+	u.winSettings.Resize(fyne.NewSize(360, 250))
 
 	settingsLabel := widget.NewLabel("Settings")
 	infoLabel := widget.NewLabel("v1.2 | License: GPLv3")
@@ -33,7 +33,7 @@ func (u *UI) loadUISettings() {
 
 	githubLink := widget.NewHyperlink("More information on Github", u.parseURL("https://github.com/Palexer/vocabulary-trainer"))
 
-	winSettings.SetContent(
+	u.winSettings.SetContent(
 		widget.NewVBox(
 			settingsLabel,
 			widget.NewHBox(
@@ -47,7 +47,7 @@ func (u *UI) loadUISettings() {
 				githubLink,
 			),
 		))
-	winSettings.Show()
+	u.winSettings.Show()
 }
 
 func (u *UI) parseURL(urlStr string) *url.URL {

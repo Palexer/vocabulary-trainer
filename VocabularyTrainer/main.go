@@ -79,6 +79,9 @@ type UI struct {
 	newJSONFile             jsonFile
 	langOneInput            *widget.Entry
 	langTwoInput            *widget.Entry
+
+	// settings UI
+	winSettings fyne.Window
 }
 
 func (u *UI) initVars() {
