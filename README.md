@@ -43,7 +43,7 @@ Please note, that the focus is not on mobile, that's why the Android version isn
 3. Clone this repository.
 4. Run ```go build .``` in the VocabularyTrainer directory.
 5. Run ```fyne package -os darwin -icon resources/icon.png``` 
-    _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling as well as compiling for Android, please take a look at the fyne.io documentation._
+    _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling I use fyne-cross. For more information about this topic as well as compiling for Android, please take a look at the fyne.io documentation._
 
 ## Usage
 
@@ -55,43 +55,16 @@ Click on "Continue" to go to the next word. The Vocabulary Trainer will count yo
 
 ### Creating JSON files
 
-You need to open a correctly formatted .json-file with the Vocabulary Trainer.
-**You can either use the Vocabulary Generator, that is built in to the Vocabulary Trainer, or manually create one like shown below.**
-Here is an example of a correctly formatted .json-file:
+In order to use the Vocabulary Trainer, you need to open a correctly formatted .json-file with it.
+You can create one by using the Vocabulary Generator, a utility that is built into the Vocabulary Trainer.
 
-```JSON
-{
- "Title": "Test File",
- "Vocabulary": [
-  [
-   "foreign word 1",
-   "translation 1",
-   "grammar1"
-  ],
-  [
-   "foreign word 2",
-   "translation2,alternative translation2",
-   "grammar2,alternative grammar2"
-  ],
-  [
-  "foreign word 3",
-  "translation3",
-  ""
-  ]
- ]
-}
-```
-
-_Note: You are NOT allowed to have spaces after the commas in the .json-files._
-The last list entry is optional (additional grammar). If you don't use it for a word, 
-you have to put an empty string there (like in the last example above).
-
-To avoid errors, it is recommended to use the Vocabulary Generator.
+_Note: The grammar input is optional, if you don't want to use just leave it blank._
 
 ### Keyboard Shortcuts
 
 |Keys|Action|
 |---|------|
+|Ctrl+Q|quit application|
 |Ctrl+O|open file|
 |Ctrl+G|open Vocabulary Generator|
 |Ctrl+D|check vocabulary|
@@ -118,7 +91,7 @@ Your usual abbreviations for the languages should mostly word. Here are some tes
 |German|de|
 |Latin|la|
 |French|fr|
-|Spanish|sp|
+|Spanish|es|
 
 
 ## ToDo
