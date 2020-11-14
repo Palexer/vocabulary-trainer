@@ -4,6 +4,7 @@ import (
 	"net/url"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
@@ -15,7 +16,7 @@ func (u *UI) loadUISettings() {
 	u.winSettings.Resize(fyne.NewSize(360, 250))
 
 	settingsLabel := widget.NewLabel("Settings")
-	infoLabel := widget.NewLabel("v2.0 | License: GPLv3")
+	infoLabel := widget.NewLabel("v2.1 | License: GPLv3")
 
 	// theme selector
 	themeSelectorLabel := widget.NewLabel("Theme")
@@ -31,14 +32,30 @@ func (u *UI) loadUISettings() {
 	})
 	themeSelector.SetSelected(u.app.Preferences().StringWithFallback("Theme", "Dark"))
 
-	githubLink := widget.NewHyperlink("More information on Github", u.parseURL("https://github.com/Palexer/vocabulary-trainer"))
+	// language selector
+	langSelectorLabel := widget.NewLabel("Language")
+	langSelector := widget.NewSelect([]string{"English", "German"}, func(selectedLanguage string) {
+		if selectedLanguage != u.app.Preferences().String("Language") {
+			dialog.ShowInformation("Restart required", "You need to restart the application\nin order to change the language", u.winSettings)
+		}
+		u.app.Preferences().SetString("Language", selectedLanguage)
+	})
+	langSelector.SetSelected(u.app.Preferences().StringWithFallback("Language", "English"))
+
+	githubLink := widget.NewHyperlink("more information on Github", u.parseURL("https://github.com/Palexer/vocabulary-trainer"))
 
 	u.winSettings.SetContent(
 		widget.NewVBox(
 			settingsLabel,
 			widget.NewHBox(
 				themeSelectorLabel,
+				layout.NewSpacer(),
 				themeSelector,
+			),
+			widget.NewHBox(
+				langSelectorLabel,
+				layout.NewSpacer(),
+				langSelector,
 			),
 			layout.NewSpacer(),
 			widget.NewHBox(
