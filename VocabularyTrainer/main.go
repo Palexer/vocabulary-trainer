@@ -82,9 +82,13 @@ type UI struct {
 
 	// settings UI
 	winSettings fyne.Window
+
+	// languages
+	lang language
 }
 
-func (u *UI) initVars() {
+func (u *UI) init() {
+	// variables
 	u.index = 0
 	u.finishedWords = 0
 	u.correct = 0
@@ -116,13 +120,13 @@ func (u *UI) loadMainUI() *widget.Box {
 	u.foreignWord = widget.NewLabelWithStyle("", fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
 	u.inputTranslation = widget.NewEntry()
 	u.inputGrammar = widget.NewEntry()
-	u.inputTranslation.SetPlaceHolder("Translation")
-	u.inputGrammar.SetPlaceHolder("Grammar")
+	u.inputTranslation.SetPlaceHolder(u.lang.Translation)
+	u.inputGrammar.SetPlaceHolder(u.lang.Grammar)
 
-	u.continueBtn = widget.NewButtonWithIcon("Continue", theme.NavigateNextIcon(), u.continueFunc)
-	u.checkBtn = widget.NewButtonWithIcon("Check", theme.ConfirmIcon(), u.checkBtnFunc)
+	u.continueBtn = widget.NewButtonWithIcon(u.lang.Forward, theme.NavigateNextIcon(), u.continueFunc)
+	u.checkBtn = widget.NewButtonWithIcon(u.lang.Check, theme.ConfirmIcon(), u.checkBtnFunc)
 
-	u.switchLanguagesBtn = widget.NewButton("Switch Languages", func() {
+	u.switchLanguagesBtn = widget.NewButton(u.lang.SwitchLanguages, func() {
 		if u.vocabularyFile.CurrentLanguage == u.vocabularyFile.FirstLanguage {
 			u.vocabularyFile.CurrentLanguage = u.vocabularyFile.SecondLanguage
 		} else {
@@ -136,7 +140,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		u.foreignWord.SetText(u.vocabularyFile.Vocabulary[u.index][u.langIndex])
 	})
 
-	openButton := widget.NewButtonWithIcon("Open File", theme.FolderOpenIcon(), u.openFileFunc)
+	openButton := widget.NewButtonWithIcon(u.lang.OpenFile, theme.FolderOpenIcon(), u.openFileFunc)
 
 	settingsButton := widget.NewButtonWithIcon("", theme.SettingsIcon(), func() {
 		u.loadUISettings()
@@ -247,6 +251,15 @@ func (u *UI) loadPreferences() {
 	case "Light":
 		u.app.Settings().SetTheme(theme.LightTheme())
 	}
+
+	// set correct language
+	switch u.app.Preferences().String("Language") {
+	case "German":
+		json.Unmarshal(resourceDeJSON.Content(), &u.lang)
+	case "English":
+		json.Unmarshal(resourceEnJSON.Content(), &u.lang)
+	}
+
 }
 
 func (u *UI) checkBtnFunc() {
@@ -382,7 +395,7 @@ func (u *UI) openFileFunc() {
 			return
 		}
 
-		err = u.fileOpened(reader)
+		err = u.openFile(reader)
 		if err != nil {
 			dialog.ShowError(err, u.mainWin)
 			return
@@ -411,7 +424,7 @@ func (u *UI) openFileFunc() {
 	openFileDialog.Show()
 }
 
-func (u *UI) fileOpened(f fyne.URIReadCloser) error {
+func (u *UI) openFile(f fyne.URIReadCloser) error {
 	if f == nil {
 		return errors.New("cancelled")
 	}
@@ -490,7 +503,7 @@ func main() {
 	win.SetIcon(resourceIconPng)
 	win.Resize(fyne.NewSize(560, 450))
 	trainerUI := &UI{mainWin: win, app: a}
-	trainerUI.initVars()
+	trainerUI.init()
 	win.SetContent(trainerUI.loadMainUI())
 	win.ShowAndRun()
 }
