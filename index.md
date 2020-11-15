@@ -2,6 +2,10 @@
 
 Vocabulary Trainer is a small application written in Go, that can help you with learning new vocabulary.
 
+## Download
+
+You can download the Vocabulary Trainer for Windows, macOS and Linux from the releases section [releases section](https://github.com/Palexer/vocabulary-trainer/releases). For more information, visit the [installation instructions](https://github.com/Palexer/vocabulary-trainer#installation) on Github.
+
 ## Features
 
 - practice any words of any language
@@ -12,4 +16,4 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 - available for Windows, macOS and Linux
 
 ## Screenshot
-![screenshot](screenshot.png)
+![screenshot](https://raw.githubusercontent.com/Palexer/vocabulary-trainer/gh-pages/screenshot.png)
