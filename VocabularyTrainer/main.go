@@ -81,7 +81,9 @@ type UI struct {
 	langTwoInput            *widget.Entry
 
 	// settings UI
-	winSettings fyne.Window
+	winSettings   fyne.Window
+	themeSelector *widget.Select
+	langSelector  *widget.Select
 
 	// languages
 	lang language
@@ -146,15 +148,15 @@ func (u *UI) loadMainUI() *widget.Box {
 		u.loadUISettings()
 	})
 
-	openGeneratorBtn := widget.NewButtonWithIcon("Vocabulary Generator", theme.FileApplicationIcon(), func() {
+	openGeneratorBtn := widget.NewButtonWithIcon(u.lang.VocabularyGenerator, theme.FileApplicationIcon(), func() {
 		if runtime.GOOS == "android" {
-			dialog.ShowError(errors.New("the vocabulary generator\n is not support on mobile\n operating systems"), u.mainWin)
+			dialog.ShowError(errors.New(u.lang.EVocGenMobile), u.mainWin)
 			return
 		}
 		u.loadUIGenerator()
 	})
 
-	randomWordsCheck := widget.NewCheck("Random Words (infinite)", func(checked bool) {
+	randomWordsCheck := widget.NewCheck(u.lang.Random, func(checked bool) {
 		if checked == true {
 			u.random = true
 
@@ -255,11 +257,10 @@ func (u *UI) loadPreferences() {
 	// set correct language
 	switch u.app.Preferences().String("Language") {
 	case "German":
-		json.Unmarshal(resourceDeJSON.Content(), &u.lang)
+		json.Unmarshal(resourceDeJson.Content(), &u.lang)
 	case "English":
-		json.Unmarshal(resourceEnJSON.Content(), &u.lang)
+		json.Unmarshal(resourceEnJson.Content(), &u.lang)
 	}
-
 }
 
 func (u *UI) checkBtnFunc() {
@@ -268,12 +269,12 @@ func (u *UI) checkBtnFunc() {
 	}
 
 	if u.userHasTry == false {
-		dialog.ShowError(errors.New("you already checked your input"), u.mainWin)
+		dialog.ShowError(errors.New(u.lang.EAlreadyChecked), u.mainWin)
 		return
 	}
 
 	if u.inputTranslation.Text == "" || u.inputGrammar.Text == "" && u.vocabularyFile.Vocabulary[u.index][2] != "" {
-		dialog.ShowError(errors.New("please enter a translation / the grammar first"), u.mainWin)
+		dialog.ShowError(errors.New(u.lang.EEnterCheck), u.mainWin)
 		return
 	}
 
@@ -287,24 +288,24 @@ func (u *UI) checkBtnFunc() {
 	checkGrammar := CheckGrammar(u.inputGrammar.Text, u.vocabularyFile.Vocabulary[u.index][2])
 
 	if checkTranslation && checkGrammar {
-		u.result.SetText("Correct")
+		u.result.SetText(u.lang.Correct)
 		u.correct++
 
 	} else if checkTranslation {
-		u.result.SetText("Partly correct")
+		u.result.SetText(u.lang.PartlyCorrect)
 		u.wrongWordsList = append(u.wrongWordsList, u.vocabularyFile.Vocabulary[u.index])
-		u.inputGrammar.SetText("Correct answer: " + u.vocabularyFile.Vocabulary[u.index][2])
+		u.inputGrammar.SetText(u.lang.CorrectAnswer + u.vocabularyFile.Vocabulary[u.index][2])
 
 	} else if checkGrammar {
-		u.result.SetText("Partly correct")
+		u.result.SetText(u.lang.PartlyCorrect)
 		u.wrongWordsList = append(u.wrongWordsList, u.vocabularyFile.Vocabulary[u.index])
-		u.inputTranslation.SetText("Correct answer: " + u.vocabularyFile.Vocabulary[u.index][1])
+		u.inputTranslation.SetText(u.lang.CorrectAnswer + u.vocabularyFile.Vocabulary[u.index][1])
 
 	} else {
-		u.result.SetText("Wrong")
+		u.result.SetText(u.lang.Wrong)
 		u.wrongWordsList = append(u.wrongWordsList, u.vocabularyFile.Vocabulary[u.index])
-		u.inputTranslation.SetText("Correct answer: " + u.vocabularyFile.Vocabulary[u.index][1])
-		u.inputGrammar.SetText("Correct answer: " + u.vocabularyFile.Vocabulary[u.index][2])
+		u.inputTranslation.SetText(u.lang.CorrectAnswer + u.vocabularyFile.Vocabulary[u.index][1])
+		u.inputGrammar.SetText(u.lang.CorrectAnswer + u.vocabularyFile.Vocabulary[u.index][2])
 	}
 	u.didCheck, u.userHasTry = true, false
 }
@@ -320,7 +321,7 @@ func (u *UI) continueFunc() {
 		// calculate the percentage of correct answers
 		var percentage float64 = math.Round((float64(u.correct)/float64(u.finishedWords+1)*100.0)*100) / 100
 		doneDialog := dialog.NewConfirm(
-			"Done.", "You reached the end of the vocabulary list. \n Correct answers: "+strconv.Itoa(u.correct)+"/"+strconv.Itoa(u.finishedWords+1)+" ("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+"\n Restart?",
+			u.lang.ConfirmDone, u.lang.ConfirmEnd+strconv.Itoa(u.correct)+"/"+strconv.Itoa(u.finishedWords+1)+" ("+(strconv.FormatFloat(percentage, 'f', -1, 64))+"%)"+u.lang.Restart,
 			func(restart bool) {
 				u.index, u.correct, u.finishedWords = 0, 0, 0
 				u.correctCounter.SetText("")
@@ -346,9 +347,9 @@ func (u *UI) continueFunc() {
 				}
 
 				if len(u.wrongWordsList) == 0 {
-					dialog.NewInformation("Wrong Words", "You entered everything correctly.", u.mainWin)
+					dialog.NewInformation(u.lang.WrongWords, u.lang.EverythingCorrect, u.mainWin)
 				} else {
-					dialog.NewInformation("Wrong Words", "You didn't know the solution to the following words:\n"+wrongWords, u.mainWin)
+					dialog.NewInformation(u.lang.WrongWords, u.lang.WrongAnswers+wrongWords, u.mainWin)
 				}
 
 			}, u.mainWin)
@@ -358,7 +359,7 @@ func (u *UI) continueFunc() {
 	} else {
 		// forward usually
 		if u.didCheck == false {
-			dialog.ShowError(errors.New("please check your input before you continue"), u.mainWin)
+			dialog.ShowError(errors.New(u.lang.ECheckBeforeContinue), u.mainWin)
 			return
 		}
 
@@ -377,8 +378,8 @@ func (u *UI) continueFunc() {
 		u.inputGrammar.SetText("")
 		u.result.SetText("")
 	}
-	u.finishedCounter.SetText("Finished words: " + strconv.Itoa(u.finishedWords) + "/" + strconv.Itoa(len(u.vocabularyFile.Vocabulary)))
-	u.correctCounter.SetText("Correct answers: " + strconv.Itoa(u.correct) + "/" + strconv.Itoa(u.finishedWords))
+	u.finishedCounter.SetText(u.lang.FinishedWords + strconv.Itoa(u.finishedWords) + "/" + strconv.Itoa(len(u.vocabularyFile.Vocabulary)))
+	u.correctCounter.SetText(u.lang.CorrectAnswers + strconv.Itoa(u.correct) + "/" + strconv.Itoa(u.finishedWords))
 	if u.random {
 		u.finishedCounter.Hide()
 	}
@@ -426,7 +427,7 @@ func (u *UI) openFileFunc() {
 
 func (u *UI) openFile(f fyne.URIReadCloser) error {
 	if f == nil {
-		return errors.New("cancelled")
+		return errors.New(u.lang.ECancelled)
 	}
 
 	byteData, err := ioutil.ReadAll(f)
@@ -434,19 +435,19 @@ func (u *UI) openFile(f fyne.URIReadCloser) error {
 		return err
 	}
 	if byteData == nil {
-		return errors.New("the file does not have any content")
+		return errors.New(u.lang.ENoContent)
 	}
 
 	json.Unmarshal(byteData, &u.vocabularyFile)
 	u.vocabularyFile.CurrentLanguage = u.vocabularyFile.FirstLanguage
 
 	if len(u.vocabularyFile.Vocabulary) == 0 {
-		return errors.New("the file does not contain any vocabulary or is not correctly formatted")
+		return errors.New(u.lang.EWrongFile)
 	}
 
 	for i := 0; i < len(u.vocabularyFile.Vocabulary); i++ {
 		if len(u.vocabularyFile.Vocabulary[i]) != 3 {
-			return errors.New("the file contains vocabulary with too many or too less arguments (error in list item " + strconv.Itoa(i+1) + " )")
+			return errors.New(u.lang.EWrongVocabulary + strconv.Itoa(i+1) + " )")
 		}
 	}
 	return nil
@@ -465,7 +466,7 @@ func (u *UI) speak() {
 
 func (u *UI) playAudio(file string) error {
 	if u.audioBusy {
-		return errors.New("can't play two audio files simultaneously")
+		return errors.New(u.lang.E2Audio)
 	}
 
 	u.audioBusy = true
@@ -498,7 +499,7 @@ func (u *UI) playAudio(file string) error {
 }
 
 func main() {
-	a := app.NewWithID("com.palexer.vocabularytrainer")
+	a := app.NewWithID("io.github.palexer")
 	win := a.NewWindow("Vocabulary Trainer")
 	win.SetIcon(resourceIconPng)
 	win.Resize(fyne.NewSize(560, 450))
