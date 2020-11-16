@@ -1,6 +1,9 @@
 ## Download
 
-You can download the Vocabulary Trainer for Windows, macOS and Linux from the releases section [releases section](https://github.com/Palexer/vocabulary-trainer/releases). For more information, visit the [installation instructions](https://github.com/Palexer/vocabulary-trainer#installation) on Github.
+You can download the Vocabulary Trainer for Windows, macOS and Linux from the
+releases section [releases section](https://github.com/Palexer/vocabulary-trainer/releases).
+
+For more information, visit the [installation instructions](https://github.com/Palexer/vocabulary-trainer#installation) on Github.
 
 ## Features
 
@@ -12,7 +15,7 @@ You can download the Vocabulary Trainer for Windows, macOS and Linux from the re
 - available for Windows, macOS and Linux
 
 ## Screenshot
-![screenshot](https://raw.githubusercontent.com/Palexer/vocabulary-trainer/gh-pages/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/Palexer/vocabulary-trainer/master/screenshot.png)
 
 ## Help
 
