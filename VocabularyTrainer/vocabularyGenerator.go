@@ -28,46 +28,46 @@ type jsonFile struct {
 func (u *UI) loadUIGenerator() {
 	u.writeIndex = 0
 
-	u.winGenerator = u.app.NewWindow("Vocabulary Generator")
+	u.winGenerator = u.app.NewWindow(u.lang.VocabularyGenerator)
 	u.winGenerator.Resize(fyne.NewSize(510, 410))
 	u.winGenerator.SetIcon(resourceIconPng)
 
-	u.saveFileBtn = widget.NewButtonWithIcon("Save File", theme.DocumentSaveIcon(), u.saveFile)
+	u.saveFileBtn = widget.NewButtonWithIcon(u.lang.Save, theme.DocumentSaveIcon(), u.saveFile)
 
 	u.titleInput = widget.NewEntry()
-	u.titleInput.SetPlaceHolder("Title")
+	u.titleInput.SetPlaceHolder(u.lang.Title)
 
 	u.foreignWordInput = widget.NewEntry()
 	u.correctTranslationInput = widget.NewEntry()
 	u.correctGrammarInput = widget.NewEntry()
 
-	u.foreignWordInput.SetPlaceHolder("Foreign Word")
-	u.correctTranslationInput.SetPlaceHolder("Translation")
-	u.correctGrammarInput.SetPlaceHolder("Grammar")
+	u.foreignWordInput.SetPlaceHolder(u.lang.ForeignWord)
+	u.correctTranslationInput.SetPlaceHolder(u.lang.Translation)
+	u.correctGrammarInput.SetPlaceHolder(u.lang.Grammar)
 
 	u.langOneInput = widget.NewEntry()
 	u.langTwoInput = widget.NewEntry()
-	u.langOneInput.SetPlaceHolder("First Language (foreign word)")
-	u.langTwoInput.SetPlaceHolder("Second language (translation)")
+	u.langOneInput.SetPlaceHolder(u.lang.FirstLanguage)
+	u.langTwoInput.SetPlaceHolder(u.lang.SecondLanguage)
 
-	saveWordBtn := widget.NewButtonWithIcon("Save Word", theme.MailForwardIcon(), u.saveWord)
+	saveWordBtn := widget.NewButtonWithIcon(u.lang.SaveWord, theme.MailForwardIcon(), u.saveWord)
 
 	// clears all the previously entered vocabulary
-	clearBtn := widget.NewButtonWithIcon("Clear", theme.ContentClearIcon(), u.clear)
+	clearBtn := widget.NewButtonWithIcon(u.lang.Clear, theme.ContentClearIcon(), u.clear)
 
 	// removes the last entered word
-	backBtn := widget.NewButtonWithIcon("Remove last entry", theme.NavigateBackIcon(), func() {
+	backBtn := widget.NewButtonWithIcon(u.lang.RemoveLastEntry, theme.NavigateBackIcon(), func() {
 		if len(u.newJSONFile.Vocabulary) == 0 {
-			dialog.ShowError(errors.New("the file doesn't contain any vocabulary"), u.winGenerator)
+			dialog.ShowError(errors.New(u.lang.ENoContent), u.winGenerator)
 			return
 		}
 		u.writeIndex--
 		u.newJSONFile.Vocabulary = u.newJSONFile.Vocabulary[:u.writeIndex]
 	})
 
-	availableLangLink := widget.NewHyperlink("available languages", u.parseURL("https://github.com/Palexer/vocabulary-trainer#available-languages-for-tts"))
+	availableLangLink := widget.NewHyperlink(u.lang.AvailableLanguages, u.parseURL("https://github.com/Palexer/vocabulary-trainer#available-languages-for-tts"))
 
-	showWordsBtn := widget.NewButton("Show Words", func() {
+	showWordsBtn := widget.NewButton(u.lang.ShowWords, func() {
 		var enteredWords string
 		for i := range u.newJSONFile.Vocabulary {
 			if i > 10 {
@@ -76,7 +76,7 @@ func (u *UI) loadUIGenerator() {
 			enteredWords = enteredWords + "\n" + strings.Join(u.newJSONFile.Vocabulary[i], " - ")
 		}
 
-		dialog.ShowInformation("Last entered Words", enteredWords, u.winGenerator)
+		dialog.ShowInformation(u.lang.LastWords, enteredWords, u.winGenerator)
 	})
 
 	// keyboard shortcuts
@@ -124,44 +124,10 @@ func (u *UI) loadUIGenerator() {
 	u.winGenerator.SetOnClosed(u.clear)
 }
 
-func (u *UI) saveFile() {
-	if len(u.newJSONFile.Vocabulary) == 0 {
-		dialog.ShowError(errors.New("the file doesn't contain any vocabulary"), u.winGenerator)
-		return
-	}
-
-	if u.langOneInput.Text == "" || u.langTwoInput.Text == "" {
-		dialog.ShowError(
-			errors.New("please enter the languages of the foreign words/translations"),
-			u.winGenerator)
-		return
-	}
-
-	saveFileDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
-		if err != nil {
-			dialog.ShowError(err, u.winGenerator)
-			return
-		}
-
-		if err == nil && writer == nil {
-			return
-		}
-
-		err = u.writeJSONFile(writer)
-		if err != nil {
-			dialog.ShowError(err, u.winGenerator)
-		}
-
-	}, u.winGenerator)
-
-	saveFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
-	saveFileDialog.Show()
-}
-
 func (u *UI) saveWord() {
 	if u.foreignWordInput.Text == "" || u.correctTranslationInput.Text == "" {
 		dialog.ShowError(
-			errors.New("please and enter at least a foreign word and the translation of it"),
+			errors.New(u.lang.EWordAndTranslation),
 			u.winGenerator)
 		return
 	}
@@ -209,22 +175,56 @@ func (u *UI) saveWord() {
 	u.correctTranslationInput.SetText("")
 }
 
+func (u *UI) saveFile() {
+	if len(u.newJSONFile.Vocabulary) == 0 {
+		dialog.ShowError(errors.New(u.lang.ENoVocabulary), u.winGenerator)
+		return
+	}
+
+	if u.langOneInput.Text == "" || u.langTwoInput.Text == "" {
+		dialog.ShowError(
+			errors.New(u.lang.EEnterLanguage),
+			u.winGenerator)
+		return
+	}
+
+	saveFileDialog := dialog.NewFileSave(func(writer fyne.URIWriteCloser, err error) {
+		if err != nil {
+			dialog.ShowError(err, u.winGenerator)
+			return
+		}
+
+		if err == nil && writer == nil {
+			return
+		}
+
+		err = u.writeJSONFile(writer)
+		if err != nil {
+			dialog.ShowError(err, u.winGenerator)
+		}
+
+	}, u.winGenerator)
+
+	saveFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
+	saveFileDialog.Show()
+}
+
 func (u *UI) writeJSONFile(f fyne.URIWriteCloser) error {
+	if f == nil {
+		return errors.New(u.lang.ECancelled)
+	}
+
 	if f.URI().Extension() != ".json" {
 		os.Remove(f.URI().String()[7:])
-		return errors.New("the vocabulary files needs the .json file extension")
+		return errors.New(u.lang.EJSONExt)
 	}
 
-	if f == nil {
-		return errors.New("cancelled")
-	}
-
-	encodedJSONFile, err := json.MarshalIndent(u.newJSONFile, "", " ")
+	encodedJSONFile, err := json.MarshalIndent(u.newJSONFile, "", " ") // encode + indent json
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(f.URI().String()[7:], encodedJSONFile, os.ModePerm)
+	err = ioutil.WriteFile(f.URI().String()[7:], encodedJSONFile, os.ModePerm) // write file
 	if err != nil {
 		return err
 	}

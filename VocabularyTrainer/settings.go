@@ -12,15 +12,16 @@ import (
 
 // loadUISettings creates the settings dialog for the application
 func (u *UI) loadUISettings() {
-	u.winSettings = u.app.NewWindow("Settings")
+	u.winSettings = u.app.NewWindow(u.lang.Settings)
+	u.winSettings.SetIcon(resourceIconPng)
 	u.winSettings.Resize(fyne.NewSize(360, 250))
 
-	settingsLabel := widget.NewLabel("Settings")
+	settingsLabel := widget.NewLabel(u.lang.Settings)
 	infoLabel := widget.NewLabel("v2.1 | License: GPLv3")
 
 	// theme selector
-	themeSelectorLabel := widget.NewLabel("Theme")
-	themeSelector := widget.NewSelect([]string{"Light", "Dark"}, func(selectedTheme string) {
+	themeSelectorLabel := widget.NewLabel(u.lang.Theme)
+	u.themeSelector = widget.NewSelect([]string{"Light", "Dark"}, func(selectedTheme string) {
 		switch selectedTheme {
 		case "Light":
 			u.app.Settings().SetTheme(theme.LightTheme())
@@ -30,19 +31,19 @@ func (u *UI) loadUISettings() {
 
 		u.app.Preferences().SetString("Theme", selectedTheme)
 	})
-	themeSelector.SetSelected(u.app.Preferences().StringWithFallback("Theme", "Dark"))
+	u.themeSelector.SetSelected(u.app.Preferences().StringWithFallback("Theme", "Dark"))
 
 	// language selector
-	langSelectorLabel := widget.NewLabel("Language")
-	langSelector := widget.NewSelect([]string{"English", "German"}, func(selectedLanguage string) {
+	langSelectorLabel := widget.NewLabel(u.lang.Language)
+	u.langSelector = widget.NewSelect([]string{"English", "German"}, func(selectedLanguage string) {
 		if selectedLanguage != u.app.Preferences().String("Language") {
-			dialog.ShowInformation("Restart required", "You need to restart the application\nin order to change the language", u.winSettings)
+			dialog.ShowInformation(u.lang.RestartRequired, u.lang.RestartInfo, u.winSettings)
 		}
 		u.app.Preferences().SetString("Language", selectedLanguage)
 	})
-	langSelector.SetSelected(u.app.Preferences().StringWithFallback("Language", "English"))
+	u.langSelector.SetSelected(u.app.Preferences().StringWithFallback("Language", "English"))
 
-	githubLink := widget.NewHyperlink("more information on Github", u.parseURL("https://github.com/Palexer/vocabulary-trainer"))
+	githubLink := widget.NewHyperlink(u.lang.MoreInfo, u.parseURL("https://github.com/Palexer/vocabulary-trainer"))
 
 	u.winSettings.SetContent(
 		widget.NewVBox(
@@ -50,12 +51,12 @@ func (u *UI) loadUISettings() {
 			widget.NewHBox(
 				themeSelectorLabel,
 				layout.NewSpacer(),
-				themeSelector,
+				u.themeSelector,
 			),
 			widget.NewHBox(
 				langSelectorLabel,
 				layout.NewSpacer(),
-				langSelector,
+				u.langSelector,
 			),
 			layout.NewSpacer(),
 			widget.NewHBox(
