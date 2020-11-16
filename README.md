@@ -8,8 +8,7 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 
 ## Installation
 
-The VocabularyTrainer is currently available for Windows, macOS, Linux and Android. 
-Please note, that the focus is not on mobile, that's why the Android version isn't that polished.
+The VocabularyTrainer is currently available for Windows, macOS, Linux and Android.
 
 ### Windows
 
@@ -94,4 +93,4 @@ Your usual abbreviations for the languages should mostly word. Here are some tes
 ## ToDo
 
 - automatically add .json file extension
-- German language support
+- default values for settings + German language support
