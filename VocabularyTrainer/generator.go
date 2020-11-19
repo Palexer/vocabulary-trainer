@@ -88,14 +88,6 @@ func (u *UI) loadUIGenerator() {
 		u.saveFile()
 	})
 
-	// next word / save word using ctrl+n
-	u.winGenerator.Canvas().AddShortcut(&desktop.CustomShortcut{
-		KeyName:  fyne.KeyN,
-		Modifier: u.modkey,
-	}, func(_ fyne.Shortcut) {
-		u.saveWord()
-	})
-
 	// add the widgets to a VBox layout and set it as the content of the window
 	u.winGenerator.SetContent(
 		widget.NewVBox(

@@ -76,22 +76,6 @@ func (u *UI) loadMainUI() *widget.Box {
 	})
 
 	// keyboard shortcuts
-	// continue using ctrl+f
-	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
-		KeyName:  fyne.KeyF,
-		Modifier: u.modkey,
-	}, func(_ fyne.Shortcut) {
-		u.continueBtnFunc()
-	})
-
-	// check using ctrl+d
-	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
-		KeyName:  fyne.KeyD,
-		Modifier: u.modkey,
-	}, func(_ fyne.Shortcut) {
-		u.checkBtnFunc()
-	})
-
 	// open generator using ctrl+g
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyG,
