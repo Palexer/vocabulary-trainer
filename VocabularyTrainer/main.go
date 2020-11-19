@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"runtime"
 
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/driver/desktop"
+	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
 
 	"fyne.io/fyne"
@@ -105,6 +107,28 @@ func (u *UI) init() {
 		u.modkey = desktop.SuperModifier
 	} else {
 		u.modkey = desktop.ControlModifier
+	}
+}
+
+func (u *UI) loadPreferences() {
+	// set correct theme
+	switch u.app.Preferences().String("Theme") {
+	case "Dark":
+		u.app.Settings().SetTheme(theme.DarkTheme())
+	case "Light":
+		u.app.Settings().SetTheme(theme.LightTheme())
+	default:
+		u.app.Settings().SetTheme(theme.DarkTheme())
+	}
+
+	// set correct language
+	switch u.app.Preferences().String("Language") {
+	case "German":
+		json.Unmarshal(resourceDeJson.Content(), &u.lang)
+	case "English":
+		json.Unmarshal(resourceEnJson.Content(), &u.lang)
+	default:
+		json.Unmarshal(resourceEnJson.Content(), &u.lang)
 	}
 }
 

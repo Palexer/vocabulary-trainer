@@ -134,24 +134,6 @@ func (u *UI) loadMainUI() *widget.Box {
 	)
 }
 
-func (u *UI) loadPreferences() {
-	// set correct theme
-	switch u.app.Preferences().String("Theme") {
-	case "Dark":
-		u.app.Settings().SetTheme(theme.DarkTheme())
-	case "Light":
-		u.app.Settings().SetTheme(theme.LightTheme())
-	}
-
-	// set correct language
-	switch u.app.Preferences().String("Language") {
-	case "German":
-		json.Unmarshal(resourceDeJson.Content(), &u.lang)
-	case "English":
-		json.Unmarshal(resourceEnJson.Content(), &u.lang)
-	}
-}
-
 func (u *UI) mainForward() {
 	if u.check == true {
 		err := u.checkBtnFunc()
