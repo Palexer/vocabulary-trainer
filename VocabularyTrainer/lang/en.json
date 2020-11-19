@@ -29,6 +29,7 @@
 	"EWrongFile": "the file does not contain any vocabulary or is not correctly formatted",
 	"EWrongVocabulary": "the file contains vocabulary with too many or too less arguments (error in list item ",
 	"E2Audio": "can't play two audio files simultaneously",
+	"EOpenToUse": "you need to open a file in order to use the application",
 
 	"Settings": "Settings",
 	"Theme": "Theme",

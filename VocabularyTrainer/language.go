@@ -31,6 +31,7 @@ type language struct {
 	EWrongFile           string `json:"EWrongFile"`
 	EWrongVocabulary     string `json:"EWrongVocabulary"`
 	E2Audio              string `json:"E2Audio"`
+	EOpenToUse           string `json:"EOpenToUse"`
 
 	Settings        string `json:"Settings"`
 	Theme           string `json:"Theme"`
