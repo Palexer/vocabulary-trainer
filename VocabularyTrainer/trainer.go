@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"math"
 	"math/rand"
-	"runtime"
 	"strconv"
 	"strings"
 
@@ -19,83 +18,6 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-// UI represents the whole GUI
-type UI struct {
-	// vars
-	vocabularyFile       vocabulary
-	index                int
-	finishedWords        int
-	correct              int
-	langIndex            int
-	wrongWordsList       [][]string
-	didCheck             bool
-	openFileToUseProgram bool
-	userHasTry           bool
-	random               bool
-	didSpeakerInit       bool
-	audioBusy            bool
-	modkey               desktop.Modifier
-	check                bool
-
-	writeIndex int
-
-	// main UI
-	app                fyne.App
-	mainWin            fyne.Window
-	title              *widget.Label
-	foreignWord        *widget.Label
-	result             *widget.Label
-	correctCounter     *widget.Label
-	finishedCounter    *widget.Label
-	inputTranslation   *widget.Entry
-	inputGrammar       *widget.Entry
-	mainForwardBtn     *widget.Button // the button that switches between check and continue
-	switchLanguagesBtn *widget.Button
-	speakBtn           *widget.Button
-
-	// generator UI
-	winGenerator            fyne.Window
-	titleInput              *widget.Entry
-	foreignWordInput        *widget.Entry
-	correctTranslationInput *widget.Entry
-	correctGrammarInput     *widget.Entry
-	saveFileBtn             *widget.Button
-	newJSONFile             jsonFile
-	langOneInput            *widget.Entry
-	langTwoInput            *widget.Entry
-
-	// settings UI
-	winSettings   fyne.Window
-	themeSelector *widget.Select
-	langSelector  *widget.Select
-
-	// languages
-	lang language
-}
-
-func (u *UI) init() {
-	// variables
-	u.index = 0
-	u.finishedWords = 0
-	u.correct = 0
-	u.langIndex = 0
-	u.didCheck = false
-	u.openFileToUseProgram = false
-	u.userHasTry = false
-	u.random = false
-	u.check = true
-
-	u.openFileToUseProgram = true
-	u.userHasTry = true
-
-	// set ctrl to super modifier on darwin hosts
-	if runtime.GOOS == "darwin" {
-		u.modkey = desktop.SuperModifier
-	} else {
-		u.modkey = desktop.ControlModifier
-	}
-}
-
 func (u *UI) loadMainUI() *widget.Box {
 	u.loadPreferences()
 
@@ -105,8 +27,8 @@ func (u *UI) loadMainUI() *widget.Box {
 	u.finishedCounter = widget.NewLabel("")
 
 	u.foreignWord = widget.NewLabelWithStyle("", fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
-	u.inputTranslation = widget.NewEntry()
-	u.inputGrammar = widget.NewEntry()
+	u.inputTranslation = newEnterEntry(u.mainForward)
+	u.inputGrammar = newEnterEntry(u.mainForward)
 	u.inputTranslation.SetPlaceHolder(u.lang.Translation)
 	u.inputGrammar.SetPlaceHolder(u.lang.Grammar)
 
@@ -205,6 +127,7 @@ func (u *UI) loadMainUI() *widget.Box {
 	return widget.NewVBox(
 		openButton,
 		u.title,
+		widget.NewSeparator(),
 		u.foreignWord,
 		u.inputTranslation,
 		u.inputGrammar,
@@ -315,7 +238,7 @@ func (u *UI) checkBtnFunc() error {
 
 func (u *UI) continueBtnFunc() error {
 	if u.openFileToUseProgram == true {
-		return errors.New("you need to open a file in order to use the application")
+		return errors.New(u.lang.EOpenToUse)
 	}
 
 	// done dialog

@@ -37,9 +37,9 @@ func (u *UI) loadUIGenerator() {
 	u.titleInput = widget.NewEntry()
 	u.titleInput.SetPlaceHolder(u.lang.Title)
 
-	u.foreignWordInput = widget.NewEntry()
-	u.correctTranslationInput = widget.NewEntry()
-	u.correctGrammarInput = widget.NewEntry()
+	u.foreignWordInput = newEnterEntry(u.saveWord)
+	u.correctTranslationInput = newEnterEntry(u.saveWord)
+	u.correctGrammarInput = newEnterEntry(u.saveWord)
 
 	u.foreignWordInput.SetPlaceHolder(u.lang.ForeignWord)
 	u.correctTranslationInput.SetPlaceHolder(u.lang.Translation)
