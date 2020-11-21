@@ -63,11 +63,8 @@ _Note: The grammar input is optional, if you don't want to use just leave it bla
 |Ctrl+Q|quit application|
 |Ctrl+O|open file|
 |Ctrl+G|open Vocabulary Generator|
-|Ctrl+D|check vocabulary|
-|Ctrl+F|move to next word|
 |            |
 |Ctrl+S|save file|
-|Ctrl+N|save word|
 
 ## License
 

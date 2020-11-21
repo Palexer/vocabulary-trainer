@@ -37,7 +37,7 @@ func (e *enterEntry) KeyDown(key *fyne.KeyEvent) {
 type UI struct {
 	// vars
 	vocabularyFile       vocabulary
-	index                int
+	index                int64
 	finishedWords        int
 	correct              int
 	langIndex            int
@@ -66,6 +66,7 @@ type UI struct {
 	mainForwardBtn     *widget.Button // the button that switches between check and continue
 	switchLanguagesBtn *widget.Button
 	speakBtn           *widget.Button
+	separator          *widget.Separator
 
 	// generator UI
 	winGenerator            fyne.Window

@@ -1,11 +1,12 @@
 package main
 
 import (
+	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"math"
-	"math/rand"
+	"math/big"
 	"strconv"
 	"strings"
 
@@ -19,12 +20,14 @@ import (
 )
 
 func (u *UI) loadMainUI() *widget.Box {
+	u.mainWin.SetMaster()
 	u.loadPreferences()
 
 	u.title = widget.NewLabel("")
 	u.result = widget.NewLabel("")
 	u.correctCounter = widget.NewLabel("")
 	u.finishedCounter = widget.NewLabel("")
+	u.separator = widget.NewSeparator()
 
 	u.foreignWord = widget.NewLabelWithStyle("", fyne.TextAlignLeading, fyne.TextStyle{Bold: true})
 	u.inputTranslation = newEnterEntry(u.mainForward)
@@ -40,6 +43,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		} else {
 			u.vocabularyFile.CurrentLanguage = u.vocabularyFile.FirstLanguage
 		}
+		// switch index for json list
 		if u.langIndex == 0 {
 			u.langIndex = 1
 		} else {
@@ -55,10 +59,6 @@ func (u *UI) loadMainUI() *widget.Box {
 	})
 
 	openGeneratorBtn := widget.NewButtonWithIcon(u.lang.VocabularyGenerator, theme.FileApplicationIcon(), func() {
-		if fyne.CurrentDevice().IsMobile() {
-			dialog.ShowError(errors.New(u.lang.EVocGenMobile), u.mainWin)
-			return
-		}
 		u.loadUIGenerator()
 	})
 
@@ -106,12 +106,13 @@ func (u *UI) loadMainUI() *widget.Box {
 	u.inputTranslation.Disable()
 	u.switchLanguagesBtn.Disable()
 	u.speakBtn.Disable()
+	u.separator.Hide()
 
 	// return the widgets in a VBox layout
 	return widget.NewVBox(
 		openButton,
 		u.title,
-		widget.NewSeparator(),
+		u.separator,
 		u.foreignWord,
 		u.inputTranslation,
 		u.inputGrammar,
@@ -208,7 +209,7 @@ func (u *UI) continueBtnFunc() error {
 	}
 
 	// done dialog
-	if u.index+1 == len(u.vocabularyFile.Vocabulary) && u.random != true {
+	if u.index+int64(1) == int64(len(u.vocabularyFile.Vocabulary)) && u.random != true {
 
 		// calculate the percentage of correct answers
 		var percentage float64 = math.Round((float64(u.correct)/float64(u.finishedWords+1)*100.0)*100) / 100
@@ -250,8 +251,13 @@ func (u *UI) continueBtnFunc() error {
 
 	} else {
 		// forward usually
+		lastIndex := u.index
+
 		if u.random {
-			u.index = rand.Intn(len(u.vocabularyFile.Vocabulary))
+			for u.index == lastIndex {
+				newIndex, _ := rand.Int(rand.Reader, big.NewInt(int64(len(u.vocabularyFile.Vocabulary))))
+				u.index = newIndex.Int64()
+			}
 			u.foreignWord.SetText(u.vocabularyFile.Vocabulary[u.index][u.langIndex])
 
 		} else {
@@ -260,7 +266,6 @@ func (u *UI) continueBtnFunc() error {
 		}
 
 		u.finishedWords++
-
 		// cleanup
 		u.inputTranslation.SetText("")
 		u.inputGrammar.SetText("")
@@ -301,6 +306,7 @@ func (u *UI) openFileFunc() {
 		u.inputTranslation.SetText("")
 		u.correctCounter.SetText("")
 		u.finishedCounter.SetText("")
+		u.separator.Show()
 		u.index, u.correct, u.finishedWords, u.langIndex = 0, 0, 0, 0
 		u.openFileToUseProgram = false
 
