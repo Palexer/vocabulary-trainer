@@ -58,17 +58,18 @@ _Note: The grammar input is optional, if you don't want to use just leave it bla
 
 ### Keyboard Shortcuts
 
+#### Vocabulary Trainer
 |Keys|Action|
 |---|------|
 |Ctrl+Q|quit application|
 |Ctrl+O|open file|
 |Ctrl+G|open Vocabulary Generator|
-|            |
+
+
+#### Vocabulary Generator
+|Keys|Action|
+|---|------|
 |Ctrl+S|save file|
-
-## License
-
-- [GPL v3](LICENSE)
 
 ## Help
 
@@ -86,8 +87,6 @@ Your usual abbreviations for the languages should mostly word. Here are some tes
 |French|fr|
 |Spanish|es|
 
+## License
 
-## ToDo
-
-- automatically add .json file extension
-- default values for settings + German language support
+[GPL v3](LICENSE)

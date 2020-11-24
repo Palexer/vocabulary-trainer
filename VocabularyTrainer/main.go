@@ -36,20 +36,19 @@ func (e *enterEntry) KeyDown(key *fyne.KeyEvent) {
 // UI represents the whole GUI
 type UI struct {
 	// vars
-	vocabularyFile       vocabulary
-	index                int64
-	finishedWords        int
-	correct              int
-	langIndex            int
-	wrongWordsList       [][]string
-	didCheck             bool
-	openFileToUseProgram bool
-	userHasTry           bool
-	random               bool
-	didSpeakerInit       bool
-	audioBusy            bool
-	modkey               desktop.Modifier
-	check                bool
+	vocabularyFile vocabulary
+	index          int64
+	finishedWords  int
+	correct        int
+	langIndex      int
+	wrongWordsList [][]string
+	didCheck       bool
+	userHasTry     bool
+	random         bool
+	didSpeakerInit bool
+	audioBusy      bool
+	modkey         desktop.Modifier
+	check          bool
 
 	writeIndex int
 
@@ -67,6 +66,7 @@ type UI struct {
 	switchLanguagesBtn *widget.Button
 	speakBtn           *widget.Button
 	separator          *widget.Separator
+	randomWordsCheck   *widget.Check
 
 	// generator UI
 	winGenerator            fyne.Window
@@ -95,12 +95,8 @@ func (u *UI) init() {
 	u.correct = 0
 	u.langIndex = 0
 	u.didCheck = false
-	u.openFileToUseProgram = false
-	u.userHasTry = false
 	u.random = false
 	u.check = true
-
-	u.openFileToUseProgram = true
 	u.userHasTry = true
 
 	// set ctrl to super modifier on darwin hosts
@@ -119,7 +115,7 @@ func (u *UI) loadPreferences() {
 	case "Light":
 		u.app.Settings().SetTheme(theme.LightTheme())
 	default:
-		u.app.Settings().SetTheme(theme.DarkTheme())
+		u.app.Settings().SetTheme(theme.DarkTheme()) // default theme is dark
 	}
 
 	// set correct language
@@ -129,7 +125,7 @@ func (u *UI) loadPreferences() {
 	case "English":
 		json.Unmarshal(resourceEnJson.Content(), &u.lang)
 	default:
-		json.Unmarshal(resourceEnJson.Content(), &u.lang)
+		json.Unmarshal(resourceEnJson.Content(), &u.lang) // default language is English
 	}
 }
 

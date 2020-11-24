@@ -62,7 +62,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		u.loadUIGenerator()
 	})
 
-	randomWordsCheck := widget.NewCheck(u.lang.Random, func(checked bool) {
+	u.randomWordsCheck = widget.NewCheck(u.lang.Random, func(checked bool) {
 		if checked == true {
 			u.random = true
 
@@ -106,6 +106,7 @@ func (u *UI) loadMainUI() *widget.Box {
 	u.inputTranslation.Disable()
 	u.switchLanguagesBtn.Disable()
 	u.speakBtn.Disable()
+	u.randomWordsCheck.Disable()
 	u.separator.Hide()
 
 	// return the widgets in a VBox layout
@@ -128,7 +129,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		layout.NewSpacer(),
 		widget.NewHBox(
 			settingsButton,
-			randomWordsCheck,
+			u.randomWordsCheck,
 			layout.NewSpacer(),
 			openGeneratorBtn,
 		),
@@ -158,10 +159,6 @@ func (u *UI) mainForward() {
 }
 
 func (u *UI) checkBtnFunc() error {
-	if u.openFileToUseProgram == true {
-		return errors.New(u.lang.EOpenToUse)
-	}
-
 	if u.userHasTry == false {
 		return errors.New(u.lang.EAlreadyChecked)
 	}
@@ -204,13 +201,8 @@ func (u *UI) checkBtnFunc() error {
 }
 
 func (u *UI) continueBtnFunc() error {
-	if u.openFileToUseProgram == true {
-		return errors.New(u.lang.EOpenToUse)
-	}
-
-	// done dialog
 	if u.index+int64(1) == int64(len(u.vocabularyFile.Vocabulary)) && u.random != true {
-
+		// done dialog
 		// calculate the percentage of correct answers
 		var percentage float64 = math.Round((float64(u.correct)/float64(u.finishedWords+1)*100.0)*100) / 100
 		doneDialog := dialog.NewConfirm(
@@ -230,7 +222,11 @@ func (u *UI) continueBtnFunc() error {
 				} else {
 					u.foreignWord.SetText("")
 					u.title.SetText("")
-					u.openFileToUseProgram = true
+
+					u.mainForwardBtn.Disable()
+					u.switchLanguagesBtn.Disable()
+					u.speakBtn.Disable()
+					u.randomWordsCheck.Disable()
 				}
 
 				// append wrong words to a string
@@ -301,6 +297,7 @@ func (u *UI) openFileFunc() {
 		u.switchLanguagesBtn.Enable()
 		u.speakBtn.Enable()
 		u.inputGrammar.Enable()
+		u.randomWordsCheck.Enable()
 		u.inputTranslation.Enable()
 		u.inputGrammar.SetText("")
 		u.inputTranslation.SetText("")
@@ -308,7 +305,6 @@ func (u *UI) openFileFunc() {
 		u.finishedCounter.SetText("")
 		u.separator.Show()
 		u.index, u.correct, u.finishedWords, u.langIndex = 0, 0, 0, 0
-		u.openFileToUseProgram = false
 
 		u.title.SetText(u.vocabularyFile.Title)
 		u.foreignWord.SetText(u.vocabularyFile.Vocabulary[u.index][u.langIndex])
