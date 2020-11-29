@@ -17,7 +17,7 @@ func (u *UI) loadUISettings() {
 	u.winSettings.Resize(fyne.NewSize(360, 250))
 
 	settingsLabel := widget.NewLabel(u.lang.Settings)
-	infoLabel := widget.NewLabel("v2.1 | License: GPLv3")
+	infoLabel := widget.NewLabel("v1.3 | License: GPLv3")
 
 	// theme selector
 	themeSelectorLabel := widget.NewLabel(u.lang.Theme)
