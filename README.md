@@ -8,11 +8,11 @@ Vocabulary Trainer is a small application written in Go, that can help you with 
 
 ## Installation
 
-The VocabularyTrainer is currently available for Windows, macOS, Linux and Android.
+The VocabularyTrainer is currently available for Windows, macOS and Linux.
 
 ### Windows
 
-- Download the .exe.zip file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases), unzip it and execute the .exe file it.
+- Download the .exe file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and execute it.
 
 ### Linux
 
@@ -28,18 +28,7 @@ The VocabularyTrainer is currently available for Windows, macOS, Linux and Andro
 
 ### macOS
 
-- Download the .app.zip file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and unzip it. You can now drag it into your applications folder and execute it. 
-  _(Alternatively you can directly execute the file from anywhere)_
-
-
-### Compile it yourself
-
-1. Install the Go compiler.
-2. Install the fyne GUI toolkit and its dependencies.
-3. Clone this repository.
-4. Run ```go build .``` in the VocabularyTrainer directory.
-5. Run ```fyne package -os darwin -icon resources/icon.png``` 
-    _Note: You can replace ```darwin``` with ```windows``` or ```linux``` to get the packages for those platforms. For cross compiling I use fyne-cross. For more information about this topic as well as compiling for Android, please take a look at the fyne.io documentation._
+- Download the .dmg file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and open it. You can now drag the application into your applications folder and execute it. 
 
 ## Usage
 
