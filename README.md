@@ -30,6 +30,10 @@ The VocabularyTrainer is currently available for Windows, macOS and Linux.
 
 - Download the .dmg file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and open it. You can now drag the application into your applications folder and execute it. 
 
+**Info:** On Windows and macOS you might see a window, that tells you, that the operatig system doesn't trust the application or that the
+application is not signed. 
+You can safely ignore that and click on something like "open anyway". On Windows, click on "more info" and continue anyway.
+
 ## Usage
 
 In order to use the Vocabulary Trainer you need a correctly formatted .json-file. You can see how to create one down below.
