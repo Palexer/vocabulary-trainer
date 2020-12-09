@@ -30,9 +30,9 @@ The VocabularyTrainer is currently available for Windows, macOS and Linux.
 
 - Download the .dmg file from the [releases section](https://github.com/Palexer/vocabulary-trainer/releases) and open it. You can now drag the application into your applications folder and execute it. 
 
-**Info:** On Windows and macOS you might see a window, that tells you, that the operatig system doesn't trust the application or that the
-application is not signed. 
-You can safely ignore that and click on something like "open anyway". On Windows, click on "more info" and continue anyway.
+**Info:** On Windows and macOS you might see a window, that tells you, that the operatig system doesn't trust the application or that the application is not signed. 
+You can safely ignore that and click on something like "open anyway". On Windows, click on "more info" and continue anyway. On Mac, you'll need to click on the application while holding "ctrl" an choose open from the new menu.
+(See [this article](https://support.apple.com/en-gb/guide/mac-help/mh40616/mac) for more information.)
 
 ## Usage
 
