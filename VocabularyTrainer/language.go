@@ -1,26 +1,26 @@
 package main
 
 type language struct {
-	Translation         string `json:"Translation"`
-	Grammar             string `json:"Grammar"`
-	Forward             string `json:"Forward"`
-	Check               string `json:"Check"`
-	SwitchLanguages     string `json:"SwitchLanguages"`
-	OpenFile            string `json:"OpenFile"`
-	VocabularyGenerator string `json:"VocabularyGenerator"`
-	Random              string `json:"Random"`
-	Correct             string `json:"Correct"`
-	PartlyCorrect       string `json:"PartlyCorrect"`
-	CorrectAnswer       string `json:"CorrectAnswer"`
-	Wrong               string `json:"Wrong"`
-	ConfirmDone         string `json:"ConfirmDone"`
-	ConfirmEnd          string `json:"ConfirmEnd"`
-	Restart             string `json:"Restart"`
-	WrongWords          string `json:"WrongWords"`
-	EverythingCorrect   string `json:"EverythingCorrect"`
-	WrongAnswers        string `json:"WrongAnswer"`
-	FinishedWords       string `json:"FinishedWords"`
-	CorrectAnswers      string `json:"CorrectAnswers"`
+	Translation       string `json:"Translation"`
+	Grammar           string `json:"Grammar"`
+	Forward           string `json:"Forward"`
+	Check             string `json:"Check"`
+	SwitchLanguages   string `json:"SwitchLanguages"`
+	OpenFile          string `json:"OpenFile"`
+	NewFile           string `json:"NewFile"`
+	Random            string `json:"Random"`
+	Correct           string `json:"Correct"`
+	PartlyCorrect     string `json:"PartlyCorrect"`
+	CorrectAnswer     string `json:"CorrectAnswer"`
+	Wrong             string `json:"Wrong"`
+	ConfirmDone       string `json:"ConfirmDone"`
+	ConfirmEnd        string `json:"ConfirmEnd"`
+	Restart           string `json:"Restart"`
+	WrongWords        string `json:"WrongWords"`
+	EverythingCorrect string `json:"EverythingCorrect"`
+	WrongAnswers      string `json:"WrongAnswer"`
+	FinishedWords     string `json:"FinishedWords"`
+	CorrectAnswers    string `json:"CorrectAnswers"`
 
 	EVocGenMobile        string `json:"EVocGenMobile"`
 	EAlreadyChecked      string `json:"EAlreadyChecked"`

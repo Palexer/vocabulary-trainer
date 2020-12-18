@@ -58,7 +58,7 @@ func (u *UI) loadMainUI() *widget.Box {
 		u.loadUISettings()
 	})
 
-	openGeneratorBtn := widget.NewButtonWithIcon(u.lang.VocabularyGenerator, theme.FileApplicationIcon(), func() {
+	openGeneratorBtn := widget.NewButtonWithIcon(u.lang.NewFile, theme.FileApplicationIcon(), func() {
 		u.loadUIGenerator()
 	})
 
@@ -78,7 +78,7 @@ func (u *UI) loadMainUI() *widget.Box {
 	// keyboard shortcuts
 	// open generator using ctrl+g
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
-		KeyName:  fyne.KeyG,
+		KeyName:  fyne.KeyN,
 		Modifier: u.modkey,
 	}, func(_ fyne.Shortcut) {
 		u.loadUIGenerator()

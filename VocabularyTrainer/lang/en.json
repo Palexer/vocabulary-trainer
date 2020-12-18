@@ -5,7 +5,7 @@
 	"Check":           "Check",
 	"SwitchLanguages": "Switch Languages",
 	"OpenFile":        "Open File",
-	"VocabularyGenerator": "Vocabulary Generator",
+	"NewFile": "New Vocabulary File",
 	"Random": "Random Words (infinite)",
 	"Correct": "Correct",
 	"PartlyCorrect": "Partly correct",

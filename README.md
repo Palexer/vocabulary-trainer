@@ -45,23 +45,17 @@ Click on "Continue" to go to the next word. The Vocabulary Trainer will count yo
 ### Creating JSON files
 
 In order to use the Vocabulary Trainer, you need to open a correctly formatted .json-file with it.
-You can create one by using the Vocabulary Generator, a utility that is built into the Vocabulary Trainer.
+You can create one by using the "New Vocabulary File" option, that is built into the Vocabulary Trainer.
 
 _Note: The grammar input is optional, if you don't want to use just leave it blank._
 
 ### Keyboard Shortcuts
 
-#### Vocabulary Trainer
 |Keys|Action|
 |---|------|
 |Ctrl+Q|quit application|
 |Ctrl+O|open file|
-|Ctrl+G|open Vocabulary Generator|
-
-
-#### Vocabulary Generator
-|Keys|Action|
-|---|------|
+|Ctrl+N|new file dialog|
 |Ctrl+S|save file|
 
 ## Help

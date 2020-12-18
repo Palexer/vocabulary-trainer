@@ -28,7 +28,7 @@ type jsonFile struct {
 func (u *UI) loadUIGenerator() {
 	u.writeIndex = 0
 
-	u.winGenerator = u.app.NewWindow(u.lang.VocabularyGenerator)
+	u.winGenerator = u.app.NewWindow(u.lang.NewFile)
 	u.winGenerator.Resize(fyne.NewSize(510, 410))
 	u.winGenerator.SetIcon(resourceIconPng)
 
