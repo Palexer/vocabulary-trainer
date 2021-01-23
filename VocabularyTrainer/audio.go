@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"fyne.io/fyne/dialog"
+	"fyne.io/fyne/v2/dialog"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"

@@ -3,11 +3,12 @@ package main
 import (
 	"net/url"
 
-	"fyne.io/fyne"
-	"fyne.io/fyne/dialog"
-	"fyne.io/fyne/layout"
-	"fyne.io/fyne/theme"
-	"fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 )
 
 // loadUISettings creates the settings dialog for the application
@@ -46,20 +47,20 @@ func (u *UI) loadUISettings() {
 	githubLink := widget.NewHyperlink(u.lang.MoreInfo, u.parseURL("https://github.com/Palexer/vocabulary-trainer"))
 
 	u.winSettings.SetContent(
-		widget.NewVBox(
+		container.NewVBox(
 			settingsLabel,
-			widget.NewHBox(
+			container.NewHBox(
 				themeSelectorLabel,
 				layout.NewSpacer(),
 				u.themeSelector,
 			),
-			widget.NewHBox(
+			container.NewHBox(
 				langSelectorLabel,
 				layout.NewSpacer(),
 				u.langSelector,
 			),
 			layout.NewSpacer(),
-			widget.NewHBox(
+			container.NewHBox(
 				infoLabel,
 				layout.NewSpacer(),
 				githubLink,

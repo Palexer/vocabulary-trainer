@@ -7,14 +7,15 @@ import (
 	"os"
 	"strings"
 
-	"fyne.io/fyne/driver/desktop"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/driver/desktop"
 
-	"fyne.io/fyne"
-	"fyne.io/fyne/dialog"
-	"fyne.io/fyne/layout"
-	"fyne.io/fyne/storage"
-	"fyne.io/fyne/theme"
-	"fyne.io/fyne/widget"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/storage"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 )
 
 type jsonFile struct {
@@ -90,7 +91,7 @@ func (u *UI) loadUIGenerator() {
 
 	// add the widgets to a VBox layout and set it as the content of the window
 	u.winGenerator.SetContent(
-		widget.NewVBox(
+		container.NewVBox(
 			u.saveFileBtn,
 			u.titleInput,
 			u.langOneInput,
@@ -102,7 +103,7 @@ func (u *UI) loadUIGenerator() {
 			u.correctGrammarInput,
 			layout.NewSpacer(),
 			layout.NewSpacer(),
-			widget.NewHBox(
+			container.NewHBox(
 				backBtn,
 				clearBtn,
 				showWordsBtn,

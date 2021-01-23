@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"runtime"
 
-	"fyne.io/fyne/app"
-	"fyne.io/fyne/driver/desktop"
-	"fyne.io/fyne/theme"
-	"fyne.io/fyne/widget"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/driver/desktop"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 
-	"fyne.io/fyne"
+	"fyne.io/fyne/v2"
 )
 
 type enterEntry struct {
@@ -138,7 +138,7 @@ type vocabulary struct {
 }
 
 func main() {
-	a := app.NewWithID("io.github.palexer")
+	a := app.NewWithID("io.github.palexer.vocabulary-trainer")
 	win := a.NewWindow("Vocabulary Trainer")
 	win.SetIcon(resourceIconPng)
 	win.Resize(fyne.NewSize(560, 450))
