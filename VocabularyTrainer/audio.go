@@ -13,13 +13,19 @@ import (
 )
 
 func (u *UI) speak() {
+	// create audio file
 	s := htgotts.Speech{Folder: os.TempDir(), Language: u.vocabularyFile.CurrentLanguage}
 	s.Speak(u.foreignWord.Text)
+
+	// play audio file
 	err := u.playAudio(os.TempDir() + "/" + u.foreignWord.Text + ".mp3")
 	if err != nil {
 		dialog.ShowError(err, u.mainWin)
 	}
-	os.Remove(os.TempDir() + "/" + u.foreignWord.Text + ".mp3")
+
+	// remove audio file
+	defer os.Remove(os.TempDir() + "/" + u.foreignWord.Text + ".mp3")
+
 	u.audioBusy = false
 }
 
