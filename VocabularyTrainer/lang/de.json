@@ -1,10 +1,10 @@
 {
-	"Translation":     "Übersetzung",
-	"Grammar":         "Grammatik",
-	"Forward":         "Weiter",
-	"Check":           "Überprüfen",
+	"Translation": "Übersetzung",
+	"Grammar": "Grammatik",
+	"Forward": "Weiter",
+	"Check": "Überprüfen",
 	"SwitchLanguages": "Sprachen vertauschen",
-	"OpenFile":        "Datei öffnen",
+	"OpenFile": "Datei öffnen",
 	"NewFile": "Neue Vokabeldatei",
 	"Random": "Zufällige Wörter (unendlich)",
 	"Correct": "Richtig",
@@ -20,7 +20,7 @@
 	"FinishedWords": "Abgeschlossene Wörter: ",
 	"CorrectAnswers": "Richtige Antworten: ",
 	"ECancelled": "abgebrochen",
-	
+
 	"EVocGenMobile": "Der Vokabel-Generator wird nicht\nauf mobile Betriebssystemen\nunterstützt",
 	"EAlreadyChecked": "Du hast deine Eingabe bereits überprüft.",
 	"EEnterCheck": "Bitte gib erst eine Übersetzung bzw. die Grammatik ein.",
@@ -43,7 +43,7 @@
 	"ForeignWord": "Fremdwort",
 	"FirstLanguage": "1. Sprache (Fremdwort)",
 	"SecondLanguage": "2. Sprache (Übersetzung)",
-	"SaveWord": "Wort speicher",
+	"SaveWord": "Wort speichern",
 	"Clear": "Alle löschen",
 	"RemoveLastEntry": "Letzten Eintrag löschen",
 	"AvailableLanguages": "verfügbare Sprachen",
