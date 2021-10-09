@@ -18,21 +18,23 @@ func (u *UI) loadUISettings() {
 	u.winSettings.Resize(fyne.NewSize(360, 250))
 
 	settingsLabel := widget.NewLabel(u.lang.Settings)
-	infoLabel := widget.NewLabel("v1.3 | License: GPLv3")
+	infoLabel := widget.NewLabel("v1.3.1 | License: BSD 3-Clause")
 
 	// theme selector
 	themeSelectorLabel := widget.NewLabel(u.lang.Theme)
-	u.themeSelector = widget.NewSelect([]string{"Light", "Dark"}, func(selectedTheme string) {
+	u.themeSelector = widget.NewSelect([]string{"System Default", "Light", "Dark"}, func(selectedTheme string) {
 		switch selectedTheme {
 		case "Light":
 			u.app.Settings().SetTheme(theme.LightTheme())
 		case "Dark":
 			u.app.Settings().SetTheme(theme.DarkTheme())
+		case "System Default":
+			u.app.Settings().SetTheme(theme.DefaultTheme())
 		}
 
 		u.app.Preferences().SetString("Theme", selectedTheme)
 	})
-	u.themeSelector.SetSelected(u.app.Preferences().StringWithFallback("Theme", "Dark"))
+	u.themeSelector.SetSelected(u.app.Preferences().StringWithFallback("Theme", "System Default"))
 
 	// language selector
 	langSelectorLabel := widget.NewLabel(u.lang.Language)

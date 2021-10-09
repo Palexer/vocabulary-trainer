@@ -5,6 +5,7 @@ import (
 	"runtime"
 
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
@@ -67,6 +68,7 @@ type UI struct {
 	speakBtn           *widget.Button
 	separator          *widget.Separator
 	randomWordsCheck   *widget.Check
+	openFileDialog     *dialog.FileDialog
 
 	// generator UI
 	winGenerator            fyne.Window
@@ -114,8 +116,10 @@ func (u *UI) loadPreferences() {
 		u.app.Settings().SetTheme(theme.DarkTheme())
 	case "Light":
 		u.app.Settings().SetTheme(theme.LightTheme())
+	case "System Default":
+		u.app.Settings().SetTheme(theme.DefaultTheme())
 	default:
-		u.app.Settings().SetTheme(theme.DarkTheme()) // default theme is dark
+		u.app.Settings().SetTheme(theme.DefaultTheme()) // default theme is system default
 	}
 
 	// set correct language
