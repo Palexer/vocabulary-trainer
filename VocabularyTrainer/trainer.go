@@ -93,6 +93,13 @@ func (u *UI) loadMainUI() fyne.CanvasObject {
 		u.openFileFunc()
 	})
 
+	// close file open dialog with ESC
+	u.mainWin.Canvas().SetOnTypedKey(func(key *fyne.KeyEvent) {
+		if key.Name == fyne.KeyEscape {
+			u.openFileDialog.Hide()
+		}
+	})
+
 	// close application using ctrl+q
 	u.mainWin.Canvas().AddShortcut(&desktop.CustomShortcut{
 		KeyName:  fyne.KeyQ,
@@ -278,7 +285,7 @@ func (u *UI) continueBtnFunc() error {
 }
 
 func (u *UI) openFileFunc() {
-	openFileDialog := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+	u.openFileDialog = dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
 		if err == nil && reader == nil {
 			return
 		}
@@ -312,8 +319,8 @@ func (u *UI) openFileFunc() {
 
 	}, u.mainWin)
 
-	openFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
-	openFileDialog.Show()
+	u.openFileDialog.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
+	u.openFileDialog.Show()
 }
 
 func (u *UI) openFile(f fyne.URIReadCloser) error {
